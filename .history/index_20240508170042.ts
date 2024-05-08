@@ -21,7 +21,6 @@ db.once('open', () => {
 });
 
 const booksSchema = new mongoose.Schema({
-    id: Number,
     title: String,
     author: String,
     price: Number,
@@ -32,42 +31,29 @@ const booksSchema = new mongoose.Schema({
     language: String
 });
 
-const usersSchema = new mongoose.Schema({
-    username: String,
-    password: String,
-    email: String,
-    phone: String,
-    address: String,
-    favorite: [Number],
-    cart: [Number]
-});
-
 const booksModel = mongoose.model('books', booksSchema);
-const usersModel = mongoose.model('users', usersSchema);
+
 
 app.get('/api', (req:any, res:any) => {
     res.send('Hello World!');
 });
 
 // Book APIs
-app.get('/api/search', async(req:any, res:any) => {
+app.get('/api/search', (req:any, res:any) => {
     const input = req.query.input as string;
-    const result = await booksModel.find({title: {$regex: input, $options: 'i'}});
+    const result = booksModel.find({title: input});
     res.send(result);
 });
-
-app.get('/api/getBestSellings', async(req:any, res:any) => {
-    const bestSellings = await booksModel.find({}).sort({sales: -1});
+app.get('/api/getBestSellings', (req:any, res:any) => {
+    const bestSellings = booksModel.find({}).sort({sales: -1});
     res.send(bestSellings);
 });
-
-app.get('/api/getRecommendations', async(req:any, res:any) => {
+app.get('/api/getRecommendations', (req:any, res:any) => {
     const genres = req.query.genres as Array<string>;
-    const recommendations = await booksModel.find({genre: {$in: genres}});
+    const recommendations = booksModel.find({genre: {$in: genres}});
     res.send(recommendations);
 });
-
-app.get('/api/getNewArrival', async(req:any, res:any) => {
+app.get('/api/getNewArrival', (req:any, res:any) => {
     const limits = [
         [0, 1],
         [1, 7],
@@ -76,17 +62,16 @@ app.get('/api/getNewArrival', async(req:any, res:any) => {
         [90, 365]
     ]
     const today = new Date();
-    const newArrival = Array(limits.length).fill(0);
-    for(let i = 0; i < limits.length; i++) {
-        const start = new Date(today);
-        start.setDate(today.getDate() - limits[i][0]);
-        const end = new Date(today);
-        end.setDate(today.getDate() - limits[i][1]);
-        newArrival[i] = await booksModel.find({publishDate: {$gte: end, $lt: start}});
-    }
+    const newArrival = Array(limits.length).fill(0).map(async(_, i) => 
+        await booksModel.find({
+            publishDate: {
+                $gte: new Date(today.setDate(today.getDate() - limits[i][0])).toISOString(), 
+                $lt: new Date(today.setDate(today.getDate() - limits[i][1])).toISOString()
+            }
+        })
+    ) as Array<Promise<any>>;
     res.send(newArrival);
 });
-
 app.get('/api/getBookInfo', async(req:any, res:any) => {
     const bookId = req.query.bookId as number;
     const bookInfo = await booksModel.findById(bookId);
@@ -95,8 +80,6 @@ app.get('/api/getBookInfo', async(req:any, res:any) => {
 
 
 // User APIs
-// Max
-// Using user schema
 app.post('/api/login', (req:any, res:any) => {});
 app.post('/api/register', (req:any, res:any) => {});
 app.post('/api/logout', (req:any, res:any) => {});
@@ -132,12 +115,11 @@ app.put('/api/genRandomBooks', async(req:any, res:any) => {
         // Create and return the random date
         return new Date(randomYear, randomMonth, randomDay);
     }
-    
-    const numBooks = req.query.numBooks ? req.query.numBooks : 15 as number;
+
+    const numBooks = req.query.numBooks as number;
 
     for(let i = 0; i < numBooks; i++) {
         const randomBook = {
-            id: Math.floor(Math.random() * 1000000) as number,
             title: Math.random().toString(36).substring(7) as string,
             author: Math.random().toString(36).substring(7) as string,
             price: Math.floor(Math.random() * 1000000) as number,
@@ -149,7 +131,7 @@ app.put('/api/genRandomBooks', async(req:any, res:any) => {
         } as Dictionary<any>;
     
         await booksModel.create(randomBook).then(() => {
-            // console.log('Random book inserted');
+            console.log('Random book inserted');
         }).catch((err) => {
             console.error(err);
         });

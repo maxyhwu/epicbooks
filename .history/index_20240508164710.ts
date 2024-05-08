@@ -21,72 +21,45 @@ db.once('open', () => {
 });
 
 const booksSchema = new mongoose.Schema({
-    id: Number,
     title: String,
     author: String,
     price: Number,
     sales: Number,
     genre: [String],
     publisher: String,
-    publishDate: Date,
+    publishDate: String,
     language: String
 });
 
-const usersSchema = new mongoose.Schema({
-    username: String,
-    password: String,
-    email: String,
-    phone: String,
-    address: String,
-    favorite: [Number],
-    cart: [Number]
-});
-
 const booksModel = mongoose.model('books', booksSchema);
-const usersModel = mongoose.model('users', usersSchema);
+
 
 app.get('/api', (req:any, res:any) => {
     res.send('Hello World!');
 });
 
 // Book APIs
-app.get('/api/search', async(req:any, res:any) => {
+app.get('/api/search', (req:any, res:any) => {
     const input = req.query.input as string;
-    const result = await booksModel.find({title: {$regex: input, $options: 'i'}});
+    const result = booksModel.find({title: input});
     res.send(result);
 });
-
-app.get('/api/getBestSellings', async(req:any, res:any) => {
-    const bestSellings = await booksModel.find({}).sort({sales: -1});
+app.get('/api/getBestSellings', (req:any, res:any) => {
+    const bestSellings = booksModel.find({}).sort({sales: -1});
     res.send(bestSellings);
 });
-
-app.get('/api/getRecommendations', async(req:any, res:any) => {
+app.get('/api/getRecommendations', (req:any, res:any) => {
     const genres = req.query.genres as Array<string>;
-    const recommendations = await booksModel.find({genre: {$in: genres}});
+    const recommendations = booksModel.find({genre: {$in: genres}});
     res.send(recommendations);
 });
-
-app.get('/api/getNewArrival', async(req:any, res:any) => {
-    const limits = [
-        [0, 1],
-        [1, 7],
-        [7, 30],
-        [30, 90],
-        [90, 365]
-    ]
+app.get('/api/getNewArrival', (req:any, res:any) => {
+    const recent = req.query.recent as number;
     const today = new Date();
-    const newArrival = Array(limits.length).fill(0);
-    for(let i = 0; i < limits.length; i++) {
-        const start = new Date(today);
-        start.setDate(today.getDate() - limits[i][0]);
-        const end = new Date(today);
-        end.setDate(today.getDate() - limits[i][1]);
-        newArrival[i] = await booksModel.find({publishDate: {$gte: end, $lt: start}});
-    }
+    const limit = today.setDate(today.getDate() - recent);
+    const newArrival = booksModel.find({publishDate: {$lt: today, $gt: limit}});
     res.send(newArrival);
 });
-
 app.get('/api/getBookInfo', async(req:any, res:any) => {
     const bookId = req.query.bookId as number;
     const bookInfo = await booksModel.findById(bookId);
@@ -95,8 +68,6 @@ app.get('/api/getBookInfo', async(req:any, res:any) => {
 
 
 // User APIs
-// Max
-// Using user schema
 app.post('/api/login', (req:any, res:any) => {});
 app.post('/api/register', (req:any, res:any) => {});
 app.post('/api/logout', (req:any, res:any) => {});
@@ -115,13 +86,13 @@ app.get('/api/getCart', (req:any, res:any) => {});
 
 // Random Gen Books APIs
 app.put('/api/genRandomBooks', async(req:any, res:any) => {
-    const getRandomDateWithinLastYear = () => {
+    const getRandomDateWithinLastTenYears = () => {
         const currentDate = new Date();
         const currentYear = currentDate.getFullYear();
-        const oneYearAgo = currentYear - 1;
+        const tenYearsAgo = currentYear - 10;
         
         // Generate a random year within the last ten years
-        const randomYear = Math.floor(Math.random() * 1) + oneYearAgo;
+        const randomYear = Math.floor(Math.random() * 10) + tenYearsAgo;
         
         // Generate a random month (0-11 corresponds to January-December)
         const randomMonth = Math.floor(Math.random() * 12);
@@ -132,19 +103,17 @@ app.put('/api/genRandomBooks', async(req:any, res:any) => {
         // Create and return the random date
         return new Date(randomYear, randomMonth, randomDay);
     }
-    
-    const numBooks = req.query.numBooks ? req.query.numBooks : 15 as number;
 
+    const numBooks = req.query.numBooks as number;
     for(let i = 0; i < numBooks; i++) {
         const randomBook = {
-            id: Math.floor(Math.random() * 1000000) as number,
             title: Math.random().toString(36).substring(7) as string,
             author: Math.random().toString(36).substring(7) as string,
             price: Math.floor(Math.random() * 1000000) as number,
             sales: Math.floor(Math.random() * 1000000) as number,
             genre: Array(5).fill(0).map(() => Math.random().toString(36).substring(7) as string) as Array<string>,
             publisher: Math.random().toString(36).substring(7) as string,
-            publishDate: getRandomDateWithinLastYear().toISOString() as string,
+            publishDate: getRandomDateWithinLastTenYears().toISOString() as string,
             language: Math.random().toString(36).substring(7) as string
         } as Dictionary<any>;
     

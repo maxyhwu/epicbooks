@@ -21,7 +21,6 @@ db.once('open', () => {
 });
 
 const booksSchema = new mongoose.Schema({
-    id: Number,
     title: String,
     author: String,
     price: Number,
@@ -32,18 +31,7 @@ const booksSchema = new mongoose.Schema({
     language: String
 });
 
-const usersSchema = new mongoose.Schema({
-    username: String,
-    password: String,
-    email: String,
-    phone: String,
-    address: String,
-    favorite: [Number],
-    cart: [Number]
-});
-
 const booksModel = mongoose.model('books', booksSchema);
-const usersModel = mongoose.model('users', usersSchema);
 
 app.get('/api', (req:any, res:any) => {
     res.send('Hello World!');
@@ -86,7 +74,6 @@ app.get('/api/getNewArrival', async(req:any, res:any) => {
     }
     res.send(newArrival);
 });
-
 app.get('/api/getBookInfo', async(req:any, res:any) => {
     const bookId = req.query.bookId as number;
     const bookInfo = await booksModel.findById(bookId);
@@ -95,8 +82,6 @@ app.get('/api/getBookInfo', async(req:any, res:any) => {
 
 
 // User APIs
-// Max
-// Using user schema
 app.post('/api/login', (req:any, res:any) => {});
 app.post('/api/register', (req:any, res:any) => {});
 app.post('/api/logout', (req:any, res:any) => {});
@@ -137,7 +122,6 @@ app.put('/api/genRandomBooks', async(req:any, res:any) => {
 
     for(let i = 0; i < numBooks; i++) {
         const randomBook = {
-            id: Math.floor(Math.random() * 1000000) as number,
             title: Math.random().toString(36).substring(7) as string,
             author: Math.random().toString(36).substring(7) as string,
             price: Math.floor(Math.random() * 1000000) as number,
