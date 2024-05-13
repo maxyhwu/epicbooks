@@ -62,8 +62,9 @@ app.get('/api/getBestSellings', async(req:any, res:any) => {
 });
 
 app.get('/api/getRecommendations', async(req:any, res:any) => {
-    const genres = req.query.genres as Array<string>;
-    const recommendations = await booksModel.find({genre: {$in: genres}});
+    const genres = req.query.genres as string;
+    const genresArr = genres.split(',') as Array<string>;
+    const recommendations = await booksModel.find({genre: {$in: genresArr}});
     res.send(recommendations);
 });
 
@@ -114,6 +115,11 @@ app.post('/api/removeFromCart', (req:any, res:any) => {});
 app.get('/api/getCart', (req:any, res:any) => {});
 
 // Random Gen Books APIs
+app.get('/api/getRandomBooks', async(req:any, res:any) => {
+    const randomBooks = await booksModel.find({});
+    res.send(randomBooks);
+});
+
 app.put('/api/genRandomBooks', async(req:any, res:any) => {
     const getRandomDateWithinLastYear = () => {
         const currentDate = new Date();
@@ -132,6 +138,13 @@ app.put('/api/genRandomBooks', async(req:any, res:any) => {
         // Create and return the random date
         return new Date(randomYear, randomMonth, randomDay);
     }
+
+    const genres = [
+        "adventure",
+        "kids",
+        "romance",
+        "animals"
+    ]
     
     const numBooks = req.query.numBooks ? req.query.numBooks : 15 as number;
 
@@ -142,17 +155,31 @@ app.put('/api/genRandomBooks', async(req:any, res:any) => {
             author: Math.random().toString(36).substring(7) as string,
             price: Math.floor(Math.random() * 1000000) as number,
             sales: Math.floor(Math.random() * 1000000) as number,
-            genre: Array(5).fill(0).map(() => Math.random().toString(36).substring(7) as string) as Array<string>,
+            genre: Array(2).fill(0).map(() => genres[Math.floor(Math.random() * genres.length)]) as Array<string>,
             publisher: Math.random().toString(36).substring(7) as string,
             publishDate: getRandomDateWithinLastYear().toISOString() as string,
             language: Math.random().toString(36).substring(7) as string
         } as Dictionary<any>;
-    
-        await booksModel.create(randomBook).then(() => {
-            // console.log('Random book inserted');
-        }).catch((err) => {
+
+        await booksModel.findOne({id: randomBook.id}).then(async(book) => {
+            if(book) {
+                await booksModel.updateOne({id: randomBook.id}, randomBook).then(() => {
+                    // console.log('Random book updated');
+                }).catch((err) => {
+                    console.error(err);
+                });
+            }
+            else {
+                await booksModel.create(randomBook).then(() => {
+                    // console.log('Random book inserted');
+                }).catch((err) => {
+                    console.error(err);
+                });
+            }
+        }).catch(async(err) => {
             console.error(err);
         });
+    
     }
     res.send('Random books generated');
 });
