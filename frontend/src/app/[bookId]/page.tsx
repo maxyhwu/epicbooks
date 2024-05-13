@@ -2,6 +2,7 @@
 
 import CartButton from "../_components/CartButton";
 import MyFavButton from "../_components/MyFavButton";
+import BookDetail from "./_components/BookDetail";
 
 // import { db } from "@/db";
 // import { commentsTable } from "@/db/schema";
@@ -157,15 +158,7 @@ export default function BookDetailPage(){
       </div>
       <div className="flex items-center justify-center pt-10 px-10">
         <div className="flex justify-center bg-custom h-screen w-screen rounded-lg">
-          
-          {/* {products.map((product) => (
-            <ProductPreview
-              productId={product.id}
-              productName={product.productName}
-              mode={mode}
-              key={product.id}
-            />
-          ))} */}
+          <BookDetail/>
         </div>
       </div>
     </div>

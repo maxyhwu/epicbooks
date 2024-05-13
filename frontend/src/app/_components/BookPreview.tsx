@@ -13,7 +13,7 @@ type BookPreviewProps = {
   // mode: string;
 };
 
-export default function ProductPreview({
+export default function BookPreview({
   bookId,
   bookName,
   // mode,
