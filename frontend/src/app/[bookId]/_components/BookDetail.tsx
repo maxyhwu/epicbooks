@@ -9,7 +9,7 @@ export default function BookDetail(){
     }
 
     return(
-    <div className="flex flex-row w-full h-full justify-center p-16">
+    <div className="flex flex-row w-full h-full justify-center p-10">
         <div className="flex flex-col gap-5">
             <Image
               src = {"/IMazon.ico"}
@@ -22,12 +22,12 @@ export default function BookDetail(){
         </div>
         <div className="ml-16 w-1/2">
             <div>
-                <p className="text-4xl mb-1">Title:</p>
-                <p className="text-4xl mb-1">Price:</p>
-                <p className="text-4xl mb-1">Author:</p>
-                <p className="text-2xl mb-1">Publisher:</p>
-                <p className="text-2xl mb-1">Published Date:</p>
-                <p className="text-2xl mb-2">Language:</p>
+                <p className="text-4xl mb-1">Title: What are we gonna eat?</p>
+                <p className="text-4xl mb-1">Price: 380 NTD</p>
+                <p className="text-4xl mb-1">Author: Max Wu</p>
+                <p className="text-2xl mb-1">Publisher: Pearson Culture</p>
+                <p className="text-2xl mb-1">Published Date: 2021.06.30 </p>
+                <p className="text-2xl mb-2">Language: Mandarin</p>
                 <div className="block h-64 w-[650px] p-2 bg-white border border-gray-200 rounded-lg shadow bg-white dark:border-gray-700 text-lg">
                     Description:   
                 </div>

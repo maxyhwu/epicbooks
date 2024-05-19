@@ -1,16 +1,22 @@
 import type { Metadata } from "next";
 import { SessionProvider } from "next-auth/react";
-import { Noto_Sans } from "next/font/google";
+import { Inika, Noto_Serif } from "next/font/google";
 
 
 import HeaderBar from "./_components/HeaderBar";
 import "./globals.css";
 
-const noto = Noto_Sans({
+const noto = Noto_Serif({
   subsets: ["latin-ext"],
   weight: ["400", "700"],
-  variable: "--noto-sans",
+  variable: "--noto-serif",
 });
+
+const inika = Inika({
+  subsets: ["latin-ext"],
+  weight: ["400", "700"],
+  variable: "--inika",
+})
 
 
 export const metadata: Metadata = {

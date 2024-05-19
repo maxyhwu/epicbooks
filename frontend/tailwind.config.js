@@ -12,7 +12,7 @@ module.exports = {
     extend: {
       colors:{
         custom: '#EFE694',
-        buttons: '#BBEDF8'
+        buttons: '#BBEDF8',
       },
     },
   },

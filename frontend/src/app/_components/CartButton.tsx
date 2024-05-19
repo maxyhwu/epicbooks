@@ -11,7 +11,7 @@ export default function CartButton() {
   const params = new URLSearchParams(searchParams);
   params.set("mode", "buyer"!);
   const handleOnClick = () => {
-    router.push(`/main/shop/cart?${params.toString()}`);
+    router.push("/cart");
   };
   return (
     <div className="flex justify-center items-center bg-yellow-200 rounded-lg p-1.5">
