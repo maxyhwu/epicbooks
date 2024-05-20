@@ -84,7 +84,7 @@ export default async function Home({
               key={"test_id"}
             />
         </div>
-        <button className="text-2xl font-bold text-right px-10 w-full underline">See More...</button>
+        <button className="text-xl font-bold text-right px-10 w-full underline">See More...</button>
         <p className="text-center mt-10 text-2xl font-bold">Recent 7 days</p>
         <div className="mt-2 flex w-full gap-10 px-10 py-5 overflow-x-scroll">
           {/* {products.map((product) => (

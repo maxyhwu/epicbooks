@@ -41,30 +41,36 @@ export default function BookPreview({
   return (
       <div className="max-h-full flex gap-5 justify-between w-full items-center rounded-md border border-black p-3 shadow-sm bg-custom">
         {/* <div className="flex gap-5"> */}
-          <div className="flex flex-col gap-3 w-1/2">
+          <div className="flex flex-col gap-2 w-1/2 min-h-full justify-between">
             <Image
               // src={`${productDetails[0].imageLink}`}
-              src = {"/IMazon.ico"}
+              src = {"/story.jpg"}  
               alt="book_pic"
               width={200}
               height={50}
+<<<<<<< HEAD
               className="max-h-48 min-h-48 max-w-full min-w-full border border-black rounded-md p-0.5 bg-white"
+=======
+              className="max-h-full min-h-full max-w-full min-w-full border border-black rounded-md"
+>>>>>>> 1cf6e445d1f58fba9c2ca8d4f186c9022320a4bf
             ></Image>
-            <div className="mt-2">
-              <div className="bg-white border border-black rounded-md p-0.5">
-                {bookName.length < 11 ? (
-                  <p className="text-sm m-1">Title: {bookName}</p>
-                ) : ( 
-                  <p className="text-sm">{bookName.substring(0, 10)}...</p>
-                )}
+            <div className="flex flex-col gap-2">
+              <div className="mt-2">
+                <div className="bg-white border border-black rounded-md p-0.5">
+                  {bookName.length < 11 ? (
+                    <p className="text-sm m-1">Title: {bookName}</p>
+                  ) : ( 
+                    <p className="text-sm">{bookName.substring(0, 10)}...</p>
+                  )}
+                </div>
+                {/* <p className="text-sm font-semibold">{"NTD " + minPrice}</p> */}
               </div>
-              {/* <p className="text-sm font-semibold">{"NTD " + minPrice}</p> */}
-            </div>
-            <div className="bg-white h-8 border border-black rounded-md p-0.5">
-              <p className="text-sm m-1">Author:</p>
-            </div>
-            <div className="bg-white h-8 border border-black rounded-md p-0.5">
-              <p className="text-sm m-1">Price:</p>  
+              <div className="bg-white h-8 border border-black rounded-md p-0.5">
+                <p className="text-sm m-1">Author:</p>
+              </div>
+              <div className="bg-white h-8 border border-black rounded-md p-0.5">
+                <p className="text-sm m-1">Price:</p>  
+              </div>
             </div>
           </div>
           <div className="flex flex-col gap-3 w-1/2">

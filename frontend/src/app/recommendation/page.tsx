@@ -15,9 +15,9 @@
 
 
 
-import BookPreview from "@/app/_components/BookPreview";
 import CartButton from "@/app/_components/CartButton";
 import MyFavButton from "@/app/_components/MyFavButton";
+import RecomPreview from "./_components/RecomPreview";
 
 type Pageprops = {
   searchParams: {
@@ -64,25 +64,25 @@ export default async function Home({
               key={product.id}
             />
           ))} */}
-          <BookPreview
+          <RecomPreview
               bookId={"test"}
               bookName={"New Book"}
               // mode={mode}
               key={"test_id"}
             />
-            <BookPreview
+            <RecomPreview
               bookId={"test"}
               bookName={"New Book"}
               // mode={mode}
               key={"test_id"}
             />
-            <BookPreview
+            <RecomPreview
               bookId={"test"}
               bookName={"New Book"}
               // mode={mode}
               key={"test_id"}
             />
-            <BookPreview
+            <RecomPreview
               bookId={"test"}
               bookName={"New Book"}
               // mode={mode}

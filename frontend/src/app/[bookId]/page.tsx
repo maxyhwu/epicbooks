@@ -156,8 +156,8 @@ export default function BookDetailPage(){
           <CartButton />
         </div>
       </div>
-      <div className="flex items-center justify-center pt-10 px-10">
-        <div className="flex justify-center bg-custom h-screen w-screen rounded-lg">
+      <div className="flex items-center justify-center pt-10 px-10 ">
+        <div className="flex justify-center bg-custom h-screen w-screen rounded-lg ">
           <BookDetail/>
         </div>
       </div>

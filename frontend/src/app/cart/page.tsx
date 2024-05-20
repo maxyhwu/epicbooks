@@ -1,120 +1,53 @@
-import Image from "next/image";
-import Link from "next/link";
-import { redirect } from "next/navigation";
-
-import { eq } from "drizzle-orm";
-
-import { db } from "@/db";
-import { cartsTable } from "@/db/schema";
-import { auth } from "@/lib/auth";
-import { publicEnv } from "@/lib/env/public";
-
-import ConfirmButton from "./_components/ConfirmButton";
-import GoShoppingButton from "./_components/GoShoppingButton";
-import TrashButton from "./_components/TrashButton";
-
-async function CartPage() {
-  const session = await auth();
-  const userId = session?.user?.id;
-  if (!userId) {
-    redirect(`${publicEnv.NEXT_PUBLIC_BASE_URL}`);
-  }
-
-  const carts = await db.query.cartsTable.findMany({
-    where: eq(cartsTable.userId, userId),
-    with: {
-      product: {
-        columns: {
-          displayId: true,
-          productName: true,
-        },
-      },
-      productDetail: {
-        columns: {
-          productImageLink: true,
-          productPrice: true,
-          productStyle: true,
-        },
-      },
-    },
-    columns: {
-      displayId: true,
-      buyQuantity: true,
-      userId: true,
-    },
-  });
-
-  const totalAmount = carts.reduce(
-    (acc, cart) =>
-      acc + parseInt(cart.productDetail.productPrice) * cart.buyQuantity,
-    0,
-  );
-
-  if (carts.length === 0) {
-    return (
-      <div className="flex h-full w-full flex-wrap justify-center rounded-b-xl border-2 px-10">
-        <div className="flex h-40 w-full items-end justify-center py-4 text-3xl font-semibold">
-          <span>Your Cart is EMPTY !</span>
-        </div>
-        <div className="flex h-40 w-full items-start justify-center">
-          <GoShoppingButton />
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="flex h-full w-full flex-wrap justify-center rounded-b-xl border-2 px-10">
-      {carts?.map((cart, index) => {
-        return (
-          <div key={index} className="flex w-full">
-            <Link
-              href={{
-                pathname: `/main/shop/${cart.product.displayId}`,
-              }}
-              className="flex h-40 w-full items-center justify-center"
-            >
-              <div className="flex h-36 w-full items-center justify-center border-b-2 border-slate-300">
-                <div className="relative flex h-36 w-1/6 items-center justify-center gap-2 p-2">
-                  <Image
-                    src={cart.productDetail.productImageLink}
-                    alt="product photo"
-                    width={130}
-                    height={130}
-                  />
+"use client"
+import { useRouter } from "next/navigation";
+import CartItem from "./_components/CartItem";
+export default function CartPage(){
+    const router = useRouter();
+    const handleCheckout = () =>{
+        router.push("/cart/checkout");
+    }
+    return(
+        <div className="flex shadow-md my-3">
+            <div className="w-3/4 bg-white px-10 py-10">
+                <div className="flex justify-between border-b pb-8">
+                    <h1 className="font-semibold text-2xl">Shopping Cart</h1>
+                    <h2 className="font-semibold text-2xl">3 Items</h2>
                 </div>
-                <div className="relative flex h-36 w-1/6 items-center justify-center gap-2 p-2">
-                  {cart.product.productName}
-                  <br />
-                  款式： {cart.productDetail.productStyle}
+                <div className="flex mt-8 mb-6">
+                    <h3 className="font-semibold text-gray-600 text-sm uppercase w-2/5">Product Details</h3>
+                    <h3 className="font-semibold text-center text-gray-600 text-sm uppercase w-1/5 text-center">Quantity</h3>
+                    <h3 className="font-semibold text-center text-gray-600 text-sm uppercase w-1/5 text-center">Price</h3>
+                    <h3 className="font-semibold text-center text-gray-600 text-sm uppercase w-1/5 text-center">Total</h3>
                 </div>
-                <div className="relative flex h-36 w-1/6 items-center justify-center gap-2 p-2">
-                  單價： ${cart.productDetail.productPrice}
+                <div>
+                    <CartItem/>
+                    <CartItem/>
+                    <CartItem/>
                 </div>
-                <div className="relative flex h-36 w-1/6 items-center justify-center gap-2 p-2">
-                  數量： {cart.buyQuantity}
-                </div>
-                <div className="relative flex h-36 w-1/6 items-center justify-center gap-2 p-2 text-lg font-semibold text-teal-900">
-                  總計： ${" "}
-                  {parseInt(cart.productDetail.productPrice) * cart.buyQuantity}
-                </div>
-              </div>
-            </Link>
-            <div className="relative flex h-36 items-center justify-center gap-2 p-2">
-              <TrashButton cartId={cart.displayId} />
             </div>
-          </div>
-        );
-      })}
-      <div className=" flex h-40 w-full items-center  justify-end gap-4 p-4">
-        <div className="text-2xl font-semibold text-teal-900">總金額:</div>
-        <div className="text-2xl font-semibold text-teal-900">
-          ${totalAmount}
-        </div>
-        <ConfirmButton />
-      </div>
-    </div>
-  );
-}
 
-export default CartPage;
+            <div id="summary" className="w-1/4 px-8 py-10">
+                <h1 className="font-semibold text-2xl border-b pb-8">Order Summary</h1>
+                <div className="flex justify-between mt-10 mb-5">
+                    <span className="font-semibold text-sm uppercase">Items 3</span>
+                    <span className="font-semibold text-sm">590$</span>
+                </div>
+                <div>
+                    <label className="font-medium inline-block mb-3 text-sm uppercase">Shipping</label>
+                    <select className="block p-2 text-gray-600 w-full text-sm">
+                        <option>Standard shipping - $10.00</option>
+                    </select>
+                </div>
+                <div className="border-t mt-8">
+                    <div className="flex font-semibold justify-between py-6 text-sm uppercase">
+                        <span>Total cost</span>
+                        <span>$600</span>
+                    </div>
+                    <button onClick={handleCheckout} className="bg-buttons font-semibold hover:bg-gray-100 border border-black rounded-md py-3 text-sm text-black uppercase w-full">Checkout</button>
+                </div>
+            </div>
+
+        </div>
+
+    );
+}
