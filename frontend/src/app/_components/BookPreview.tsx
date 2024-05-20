@@ -48,7 +48,7 @@ export default function BookPreview({
               alt="book_pic"
               width={200}
               height={50}
-              className="max-h-48 min-h-48 border border-black rounded-md p-0.5 bg-white"
+              className="max-h-48 min-h-48 max-w-full min-w-full border border-black rounded-md p-0.5 bg-white"
             ></Image>
             <div className="mt-2">
               <div className="bg-white border border-black rounded-md p-0.5">

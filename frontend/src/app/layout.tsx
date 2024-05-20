@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { SessionProvider } from "next-auth/react";
 import { Noto_Sans } from "next/font/google";
-
+import { Inika } from "next/font/google";
 
 import HeaderBar from "./_components/HeaderBar";
 import "./globals.css";
