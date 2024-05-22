@@ -1,7 +1,5 @@
 "use client"
 import { publicEnv } from "@/lib/env/public";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import { IconButton } from "@mui/material";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 // import { getProductDetails } from "../../warehouse/_components/action";
@@ -48,11 +46,7 @@ export default function BookPreview({
               alt="book_pic"
               width={200}
               height={50}
-<<<<<<< HEAD
-              className="max-h-48 min-h-48 max-w-full min-w-full border border-black rounded-md p-0.5 bg-white"
-=======
-              className="max-h-full min-h-full max-w-full min-w-full border border-black rounded-md"
->>>>>>> 1cf6e445d1f58fba9c2ca8d4f186c9022320a4bf
+              className="max-h-48 min-h-48 max-w-full min-w-full border border-black rounded-md p-0.5"
             ></Image>
             <div className="flex flex-col gap-2">
               <div className="mt-2">
@@ -73,28 +67,13 @@ export default function BookPreview({
               </div>
             </div>
           </div>
-          <div className="flex flex-col gap-3 w-1/2">
-            {/* <div className="mt-2 flex justify-between">
-              <p className="text-sm text-gray-500">Quantity: {totalQuantity}</p>
-              <p className="text-sm text-gray-500">Sold: {totalSold}</p>
-            </div> */}
-            <div className=" relative border border-black bg-white h-72 rounded-md p-2">
-              <p className="text-sm m-1"> Description:</p>
-              <button className="text-xs absolute text-center border border-black bottom-0 right-0 m-2 bg-custom hover:bg-yellow-500 text-black py-1 px-3 rounded-2xl"
-              onClick={handleDetail}>
-                More...
-                </button>
-            </div>
-            <div className="flex flex-row justify-between">
-              <div className="flex justify-center item-center border border-black bg-white rounded-md p-0.5 w-8 h-8">
-                <IconButton onClick={handleOnClick} className="hover:text-lime-700">
-                  <FavoriteBorderIcon />
-                </IconButton>
-              </div>
-              <button className="text-center border border-black bg-white rounded-md py-1 px-6 h-8 text-sm">Add To My Cart</button>
-            </div>
+          <div className="w-1/2 relative border border-black bg-white h-full rounded-md p-2">
+            <p className="text-sm m-1"> Description:</p>
+            <button className="text-xs absolute text-center border border-black bottom-0 right-0 m-2 bg-custom hover:bg-yellow-500 text-black py-1 px-3 rounded-2xl"
+            onClick={handleDetail}>
+              More...
+              </button>
           </div>
-        {/* </div> */}
       </div>
   );
 }
