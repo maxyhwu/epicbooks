@@ -48,7 +48,11 @@ export default function BookPreview({
               alt="book_pic"
               width={200}
               height={50}
+<<<<<<< HEAD
+              className="max-h-48 min-h-48 max-w-full min-w-full border border-black rounded-md p-0.5 bg-white"
+=======
               className="max-h-full min-h-full max-w-full min-w-full border border-black rounded-md"
+>>>>>>> 1cf6e445d1f58fba9c2ca8d4f186c9022320a4bf
             ></Image>
             <div className="flex flex-col gap-2">
               <div className="mt-2">
