@@ -2,6 +2,8 @@ import express from 'express';
 import { Dictionary } from 'express-serve-static-core';
 import mongoose, { ConnectOptions } from 'mongoose';
 import dotenv from 'dotenv';
+import jdenticon from 'jdenticon';
+import { uniqueNamesGenerator, Config, adjectives, colors, animals, languages, names } from 'unique-names-generator';
 
 const app = express() as express.Application;
 const port = 3000 as number;
@@ -29,7 +31,8 @@ const booksSchema = new mongoose.Schema({
     genre: [String],
     publisher: String,
     publishDate: Date,
-    language: String
+    language: String,
+    image: String
 });
 
 const usersSchema = new mongoose.Schema({
@@ -105,14 +108,132 @@ app.post('/api/forgotPassword', (req:any, res:any) => {});
 app.get('/api/getUserInfo', (req:any, res:any) => {});
 
 // MyFavorite APIs
-app.post('/api/addFavorite', (req:any, res:any) => {});
-app.post('/api/removeFavorite', (req:any, res:any) => {});
-app.get('/api/getFavorite', (req:any, res:any) => {});
+app.post('/api/addFavorite', (req:any, res:any) => {
+    const username = req.query.username ? req.query.username : "nullUser" as string;
+    const bookId = req.query.bookId ? req.query.bookId : 12345678 as number;
+    usersModel.findOne({username: username}).then(async(user) => {
+        if(user) {
+            if(user.favorite.includes(bookId)) {
+                res.send('Already in favorite');
+            }
+            else {
+                user.favorite.push(bookId);
+                await usersModel.updateOne({username: username}, user).then(() => {
+                    res.send('Added to favorite');
+                }).catch((err) => {
+                    console.error(err);
+                });
+            }
+        }
+        else {
+            res.send('User not found');
+        }
+    }).catch((err) => {
+        console.error(err);
+    });
+});
+app.post('/api/removeFavorite', (req:any, res:any) => {
+    const username = req.query.username ? req.query.username : "nullUser" as string;
+    const bookId = req.query.bookId ? req.query.bookId : 12345678 as number;
+    usersModel.findOne({username: username}).then(async(user) => {
+        if(user) {
+            if(user.favorite.includes(bookId)) {
+                user.favorite = user.favorite.filter((id: number) => id !== bookId);
+                await usersModel.updateOne({username: username}, user).then(() => {
+                    res.send('Removed from favorite');
+                }).catch((err) => {
+                    console.error(err);
+                });
+            }
+            else {
+                res.send('Not in favorite');
+            }
+        }
+        else {
+            res.send('User not found');
+        }
+    }).catch((err) => {
+        console.error(err);
+    });
+});
+app.get('/api/getFavorite', (req:any, res:any) => {
+    const username = req.query.username ? req.query.username : "nullUser" as string;
+    usersModel.findOne({username: username}).then((user) => {
+        if(user) {
+            res.send(user.favorite);
+        }
+        else {
+            res.send('User not found');
+        }
+    }).catch((err) => {
+        console.error(err);
+    });
+});
 
 // Cart APIs
-app.post('/api/addToCart', (req:any, res:any) => {});
-app.post('/api/removeFromCart', (req:any, res:any) => {});
-app.get('/api/getCart', (req:any, res:any) => {});
+app.post('/api/addToCart', (req:any, res:any) => {
+    const username = req.query.username ? req.query.username : "nullUser" as string;
+    const bookId = req.query.bookId ? req.query.bookId : 12345678 as number;
+    usersModel.findOne({username
+    }).then(async(user) => {
+        if(user) {
+            if(user.cart.includes(bookId)) {
+                res.send('Already in cart');
+            }
+            else {
+                user.cart.push(bookId);
+                await usersModel.updateOne({username: username}, user).then(() => {
+                    res.send('Added to cart');
+                }).catch((err) => {
+                    console.error(err);
+                });
+            }
+        }
+        else {
+            res.send('User not found');
+        }
+    }).catch((err) => {
+        console.error(err);
+    });
+});
+app.post('/api/removeFromCart', (req:any, res:any) => {
+    const username = req.query.username ? req.query.username : "nullUser" as string;
+    const bookId = req.query.bookId ? req.query.bookId : 12345678 as number;
+    usersModel.findOne({username: username}).then(async(user) => {
+        if(user) {
+            if(user.cart.includes(bookId)) {
+                user.cart = user.cart.filter((id: number) => id !== bookId);
+                await usersModel.updateOne({username: username}, user).then(() => {
+                    res.send('Removed from cart');
+                }).catch((err) => {
+                    console.error(err);
+                });
+            }
+            else {
+                res.send('Not in cart');
+            }
+        }
+        else {
+            res.send('User not found');
+        }
+    }
+    ).catch((err) => {
+        console.error(err);
+    });
+});
+app.get('/api/getCart', (req:any, res:any) => {
+    const username = req.query.username ? req.query.username : "nullUser" as string;
+    usersModel.findOne({username: username}).then((user) => {
+        if(user) {
+            res.send(user.cart);
+        }
+        else {
+            res.send('User not found');
+        }
+    }).catch((err) => {
+        console.error(err);
+    });
+});
 
 // Random Gen Books APIs
 app.get('/api/getRandomBooks', async(req:any, res:any) => {
@@ -147,18 +268,33 @@ app.put('/api/genRandomBooks', async(req:any, res:any) => {
     ]
     
     const numBooks = req.query.numBooks ? req.query.numBooks : 15 as number;
-
+    const randomNameConfig: Config = {
+        dictionaries: [names, names],
+        separator: ' ' as string,
+        length: 2
+    };
+    const randomLanguageConfig: Config = {
+        dictionaries: [languages],
+        length: 1
+    };
+    const randomTitleConfig: Config = {
+        dictionaries: [adjectives, colors, animals, languages, names],
+        separator: ' ' as string,
+        length: 3,
+        style: 'capital' as any
+    };
     for(let i = 0; i < numBooks; i++) {
         const randomBook = {
             id: Math.floor(Math.random() * 1000000) as number,
-            title: Math.random().toString(36).substring(7) as string,
-            author: Math.random().toString(36).substring(7) as string,
+            title: uniqueNamesGenerator(randomTitleConfig) as string,
+            author: uniqueNamesGenerator(randomNameConfig) as string,
             price: Math.floor(Math.random() * 1000000) as number,
             sales: Math.floor(Math.random() * 1000000) as number,
-            genre: Array(2).fill(0).map(() => genres[Math.floor(Math.random() * genres.length)]) as Array<string>,
-            publisher: Math.random().toString(36).substring(7) as string,
+            genre: genres.sort(() => Math.random() - 0.5).slice(0, Math.ceil(Math.random() * (genres.length-1))) as Array<string>,
+            publisher: uniqueNamesGenerator(randomNameConfig) as string,
             publishDate: getRandomDateWithinLastYear().toISOString() as string,
-            language: Math.random().toString(36).substring(7) as string
+            language: uniqueNamesGenerator(randomLanguageConfig) as string,
+            image: jdenticon.toSvg(Math.random().toString(36).substring(7), 200) as string
         } as Dictionary<any>;
 
         await booksModel.findOne({id: randomBook.id}).then(async(book) => {
@@ -193,7 +329,53 @@ app.delete('/api/delRandomBooks', async(req:any, res:any) => {
     res.send('Random books deleted');
 });
 
+// Gen Null User APIs
+app.put('/api/genNullUser', async(req:any, res:any) => {
+    const nullUser = {
+        username: 'nullUser',
+        password: 'nullUser',
+        email: 'nullUser',
+        phone: 'nullUser',
+        address: 'nullUser',
+        favorite: [],
+        cart: []
+    } as Dictionary<any>;
+
+    await usersModel.findOne({username: 'nullUser'}).then(async(user) => {
+        if(user) {
+            await usersModel.updateOne({username: 'nullUser'}, nullUser).then(() => {
+                // console.log('Null user updated');
+            }).catch((err) => {
+                console.error(err);
+            });
+        }
+        else {
+            await usersModel.create(nullUser).then(() => {
+                // console.log('Null user inserted');
+            }).catch((err) => {
+                console.error(err);
+            });
+        }
+    }).catch(async(err) => {
+        console.error(err);
+    });
+    res.send('Null user generated');
+});
+
+app.delete('/api/delNullUser', async(req:any, res:any) => {
+    await usersModel.deleteOne({username: 'nullUser'}).then(() => {
+        // console.log('Null user deleted');
+    }).catch((err) => {
+        console.error(err);
+    });
+    res.send('Null user deleted');
+});
+
+app.get('/api/getNullUser', async(req:any, res:any) => {
+    const nullUser = await usersModel.findOne({username: 'nullUser'});
+    res.send(nullUser);
+});
+
 app.listen(port, () => {
   console.log(`Server started at http://localhost:${port}`);
 });
-
