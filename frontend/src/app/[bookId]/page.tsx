@@ -13,9 +13,9 @@ type Pageprops = {
 
 // export default ProductPage;
 export default async function BookDetailPage({searchParams:{bookId},}: Pageprops){
-  alert(bookId)
-  const {getBookInfo} = useBooks();
+  const { getBookInfo } = useBooks();
   const bookInfo = await getBookInfo(bookId);
+  
   return(
     <main className="flex min-h-screen items-start rounded-b-xl border-2">
     <div className="w-full flex flex-col justify-center">

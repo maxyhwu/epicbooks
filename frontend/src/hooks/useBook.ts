@@ -53,7 +53,7 @@ export default function useBooks(){
             }
         })
         if (response.ok) {
-            const newArrivals: booksType[] = await response.json();
+            const newArrivals: booksType[][] = await response.json();
             // Now books contains the parsed JSON data
             return newArrivals
         } else {
@@ -62,18 +62,18 @@ export default function useBooks(){
     }
 
     const getBookInfo = async (bookId: number) =>{
-        const response = await fetch(`http://localhost:8000/api/getBookInfo?bookId=${bookId}`,{
+        const response = await fetch(`http://localhost:8000/api/getBookInfo/?bookId=${bookId}`,{
             method: 'GET',
             headers: {
             'Content-Type' : 'application/json',
-            }
+            },
         })
         if (response.ok) {
             const bookInfo: booksType = await response.json();
             // Now books contains the parsed JSON data
             return bookInfo
         } else {
-            console.error('Failed to fetch book info:', response.status);
+            console.error(`Failed to fetch book ${bookId} info:`, response.status);
         }
     }
     

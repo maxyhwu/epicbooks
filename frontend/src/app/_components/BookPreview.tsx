@@ -37,7 +37,7 @@ export default function BookPreview({
   const handleDetail = () =>{
     const params = new URLSearchParams(searchParams);
     params.set("bookId", bookId!);
-    router.push(`${pathname}?${params.toString()}`);
+    router.push(`/${bookId}?${params.toString()}`);
   }
 
   return (

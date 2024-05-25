@@ -14,8 +14,12 @@ type Pageprops = {
 export default async function Home({
   searchParams: { searchName },
 }: Pageprops) {
-  const {getNewArrival} = useBooks();
+  const { getNewArrival } = useBooks();
   const newArrivals = await getNewArrival();
+  if (!newArrivals) {
+    return;
+  }
+  
   
 
   return (
@@ -32,7 +36,7 @@ export default async function Home({
         <p className="text-center mt-6 text-2xl font-bold">Today</p>
         <div className="mt-2 grid w-full grid-cols-3 gap-10 px-10 py-5">
         {
-            newArrivals?.map((newArrival:booksType) =>(
+            newArrivals[0].map((newArrival:booksType, i) =>(
               <BookPreview
               bookId={newArrival?.id?.toString()}
               bookName={newArrival.title}
@@ -40,7 +44,7 @@ export default async function Home({
               author={newArrival.author}
               description={newArrival.description}
               image={"/IMazon.ico"}
-              key={newArrival?.id?.toString()}
+              key={i}
             />
             ))
           }
@@ -50,7 +54,7 @@ export default async function Home({
         <p className="text-center mt-10 text-2xl font-bold">Recent 7 days</p>
         <div className="mt-5 grid w-full grid-cols-3 gap-10 px-10 py-5">
           {
-            newArrivals?.map((newArrival:booksType) =>(
+            newArrivals[1]?.map((newArrival:booksType, i) =>(
               <BookPreview
               bookId={newArrival?.id?.toString()}
               bookName={newArrival.title}
@@ -58,11 +62,63 @@ export default async function Home({
               author={newArrival.author}
               description={newArrival.description}
               image={"/IMazon.ico"}
-              key={newArrival?.id?.toString()}
+              key={i}
             />
             ))
           }
         </div>
+        <button className="text-xl font-bold text-right px-10 w-full underline">See More...</button>
+        <p className="text-center mt-10 text-2xl font-bold">Recent 30 days</p>
+        <div className="mt-5 grid w-full grid-cols-3 gap-10 px-10 py-5">
+          {
+            newArrivals[2]?.map((newArrival:booksType, i) =>(
+              <BookPreview
+              bookId={newArrival?.id?.toString()}
+              bookName={newArrival.title}
+              price={newArrival.price}
+              author={newArrival.author}
+              description={newArrival.description}
+              image={"/IMazon.ico"}
+              key={i}
+            />
+            ))
+          }
+        </div>
+        <button className="text-xl font-bold text-right px-10 w-full underline">See More...</button>
+        <p className="text-center mt-10 text-2xl font-bold">Recent 90 days</p>
+        <div className="mt-5 grid w-full grid-cols-3 gap-10 px-10 py-5">
+          {
+            newArrivals[3]?.map((newArrival:booksType, i) =>(
+              <BookPreview
+              bookId={newArrival?.id?.toString()}
+              bookName={newArrival.title}
+              price={newArrival.price}
+              author={newArrival.author}
+              description={newArrival.description}
+              image={"/IMazon.ico"}
+              key={i}
+            />
+            ))
+          }
+        </div>
+        <button className="text-xl font-bold text-right px-10 w-full underline">See More...</button>
+        <p className="text-center mt-10 text-2xl font-bold">Recent 365 days</p>
+        <div className="mt-5 grid w-full grid-cols-3 gap-10 px-10 py-5">
+          {
+            newArrivals[4]?.map((newArrival:booksType, i) =>(
+              <BookPreview
+              bookId={newArrival?.id?.toString()}
+              bookName={newArrival.title}
+              price={newArrival.price}
+              author={newArrival.author}
+              description={newArrival.description}
+              image={"/IMazon.ico"}
+              key={i}
+            />
+            ))
+          }
+        </div>
+        <button className="text-xl font-bold text-right px-10 w-full underline">See More...</button>
       </div>
     </main>
   );
