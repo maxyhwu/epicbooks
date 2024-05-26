@@ -1,9 +1,10 @@
 "use client"
 import { booksType } from "@/lib/types";
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { IconButton } from "@mui/material";
+import { red } from "@mui/material/colors";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { ChangeEvent, useState } from "react";
 
 export default function BookDetail(
@@ -20,7 +21,7 @@ export default function BookDetail(
     description}:booksType
 ){
     const [buyQuantity, setBuyQuantity] = useState(1);
-    const router = useRouter()
+    const [isFav, setIsFav] = useState(false);
     const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
         const inputValue = e.target.value;
         if (parseInt(inputValue) <= 1) {
@@ -30,8 +31,12 @@ export default function BookDetail(
             setBuyQuantity(parseInt(inputValue));
         }
     }
+    const handleAddToCart = () =>{
+
+    }
     const handleFav = () =>{
-        alert("Book is added to My Favorite")
+        setIsFav(!isFav);
+        alert(isFav ? "Book removed from My Favorite" : "Book added to My Favorite");
     }
 
     return(
@@ -63,13 +68,13 @@ export default function BookDetail(
                 </div>
             </div>
             <div className="flex flex-row mt-3 gap-5">
-                <div className="flex justify-center item-center border border-black bg-white rounded-md p-0.5 w-25 h-25">
-                    <IconButton onClick={handleFav} className="hover:text-lime-700">
-                        <FavoriteBorderIcon />
+                <div onClick={handleFav} className="flex justify-center item-center border border-black bg-white rounded-md p-0.5 w-25 h-25">
+                    <IconButton className="hover:text-lime-700">
+                        {isFav ? <FavoriteIcon sx={{ color: red[500] }}/> : <FavoriteBorderIcon />}
                     </IconButton>
                 </div>
                 <input type='number' value={buyQuantity} className='w-12 border ml-1 rounded-md text-center border border-black' onChange={handleOnChange}></input>
-                <button className="text-center border border-black bg-white rounded-md py-1 px-6 h-25 text-lg">Add To My Cart</button>
+                <button onClick={handleAddToCart} className="text-center border border-black bg-white rounded-md py-1 px-6 h-25 text-lg">Add To My Cart</button>
                 <p className="mt-5"> {sales?.toString()} people had bought it</p>
             </div>
         </div>

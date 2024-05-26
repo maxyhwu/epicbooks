@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 import express from 'express';
 import jdenticon from 'jdenticon';
 import mongoose, { ConnectOptions } from 'mongoose';
+import nodemailer from 'nodemailer';
 import { Config, adjectives, animals, colors, languages, names, uniqueNamesGenerator } from 'unique-names-generator';
 import { booksType } from './types';
 
@@ -121,20 +122,116 @@ app.get('/api/getBookInfo', async (req, res) => {
 });
 
 // User APIs
-app.post('/api/login', (req, res) => {
-    // Add your login logic here
+app.post('/api/login', async (req, res) => {
+    const { username, password } = req.body;
+    try {
+        const result = await usersModel.findOne({ username, password });
+        if (result) {
+            res.send('Login success');
+        } else {
+            res.send('Login failed');
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Internal Server Error');
+    }
 });
-app.post('/api/register', (req, res) => {
-    // Add your register logic here
+
+app.post('/api/register', async (req, res) => {
+    const newUser = {
+        username: req.body.username,
+        password: req.body.password,
+        email: req.body.email,
+        phone: req.body.phone,
+        address: req.body.address,
+        favorite: [],
+        cart: []
+    };
+
+    try {
+        await usersModel.create(newUser);
+        res.send('Register success');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Register failed');
+    }
 });
+
 app.post('/api/logout', (req, res) => {
-    // Add your logout logic here
+    res.send('Logout success');
 });
-app.post('/api/forgotPassword', (req, res) => {
-    // Add your forgotPassword logic here
+
+app.post('/api/forgotPassword', async (req, res) => {
+    const { username, email } = req.body;
+
+    const generateToken = (): string => {
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let token = '';
+        for (let i = 0; i < 10; i++) {
+            token += characters.charAt(Math.floor(Math.random() * characters.length));
+        }
+        return token;
+    };
+
+    const sendResetEmail = async (username: string, email: string) => {
+        const token: string = generateToken();
+        const link: string = `http://localhost:3000/reset-password?token=${token}`;
+
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_PASS
+            }
+        });
+
+        const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: email,
+            subject: 'ePicBooks Password Reset',
+            text: `Hello ${username},\n\nPlease click on the following link to reset your password:\n\n${link}\n\nIf you did not request a password reset, please ignore this email.\n\nBest regards,\nThe ePicBooks Team`
+        };
+
+        try {
+            await transporter.sendMail(mailOptions);
+            res.send('Password reset email sent');
+        } catch (error) {
+            console.error(error);
+            res.status(500).send('Failed to send password reset email');
+        }
+    };
+
+    try {
+        const result = await usersModel.findOne({ username, email });
+        if (result) {
+            await sendResetEmail(username, email);
+        } else {
+            res.send('Username and email do not match');
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Internal Server Error');
+    }
 });
-app.get('/api/getUserInfo', (req, res) => {
-    // Add your getUserInfo logic here
+
+app.post('/api/resetPassword', async (req, res) => {
+    const { token, newPassword } = req.body;
+
+    // Verify the token and reset the password logic goes here
+    // ...
+
+    res.send('Password reset successful');
+});
+
+app.get('/api/getUserInfo', async (req, res) => {
+    const username = req.query.username as string;
+    try {
+        const result = await usersModel.findOne({ username });
+        res.send(result);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Internal Server Error');
+    }
 });
 
 // MyFavorite APIs

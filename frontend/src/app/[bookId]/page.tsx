@@ -1,8 +1,8 @@
 // import { auth } from "@/lib/auth";
 
 import CartButton from "@/app/_components/CartButton";
-import MyFavButton from "@/app/_components/MyFavButton";
 import useBooks from "@/hooks/useBook";
+import MyFavButton from "../_components/MyFavButton";
 import BookDetail from "./_components/BookDetail";
 
 type Pageprops = {
