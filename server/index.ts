@@ -113,7 +113,7 @@ app.get('/api/getNewArrival', async (req, res) => {
 app.get('/api/getBookInfo', async (req, res) => {
     const bookId = Number(req.query.bookId);
     try {
-        const bookInfo: booksType = await booksModel.findOne({ id: bookId }, {_id:0, __v:0});
+        const bookInfo: booksType = await booksModel.findOne({ id: bookId });
         res.send(bookInfo);
     } catch (error) {
         res.status(500).send(error);

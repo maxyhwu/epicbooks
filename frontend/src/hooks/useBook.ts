@@ -69,6 +69,7 @@ export default function useBooks(){
             },
         })
         if (response.ok) {
+            console.log(response);
             const bookInfo: booksType = await response.json();
             // Now books contains the parsed JSON data
             return bookInfo
