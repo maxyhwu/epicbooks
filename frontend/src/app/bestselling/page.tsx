@@ -13,15 +13,16 @@ type Pageprops = {
 export default async function Home({
   searchParams: { searchName, mode },
 }: Pageprops) {
-  // const session = await auth();
-  // const userId = session?.user?.id;
-  // if (!userId) {
-  //   redirect(`${publicEnv.NEXT_PUBLIC_BASE_URL}`);
-  // }
-  // console.log(searchName);
   const {getBestSellings} = useBooks();
-  
-  const bestsellings = await getBestSellings();
+  const bestsellings = await getBestSellings() ?? [];
+  // Step 1: Sort the array based on the price in descending order
+  const sortedBestSellings = [...bestsellings].sort((a, b) => Number(b.sales) - Number(a.sales));
+
+  // Step 2: Get the first three maximum values
+  const topThreeArrivals = sortedBestSellings.slice(0, 3);
+
+  // Step 3: Get the rest of the elements in the array
+  const restOfArrivals = sortedBestSellings.slice(3);
   
   return (
     <main className="flex min-h-screen items-start rounded-b-xl border-2">
@@ -37,14 +38,31 @@ export default async function Home({
         <p className="text-center mt-6 text-2xl font-bold">Ranking</p>
         <div className="relative mt-2 grid w-full grid-cols-3 gap-10 px-10 py-5">
         {
-            bestsellings?.map((book:booksType) =>(
+            topThreeArrivals?.map((book:booksType, index: number) =>(
               <BestSellingPreview
+              isTopThree={true}
+              order={index+1}
               bookId={book.id.toString()}
               bookName={book.title}
               price={book.price}
               author={book.author}
               description={book.description}
-              image={"/IMazon.ico"}
+              image={book.image}
+              key={book.id.toString()}
+            />
+            ))
+          } 
+        {
+            restOfArrivals?.map((book:booksType) =>(
+              <BestSellingPreview
+              isTopThree={false}
+              order={0}
+              bookId={book.id.toString()}
+              bookName={book.title}
+              price={book.price}
+              author={book.author}
+              description={book.description}
+              image={book.image}
               key={book.id.toString()}
             />
             ))

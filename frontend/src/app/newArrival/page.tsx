@@ -21,7 +21,6 @@ export default async function Home({
   }
   
   
-
   return (
     <main className="flex min-h-screen items-start rounded-b-xl border-2">
       <div className="w-full flex-col justify-between">
@@ -43,7 +42,7 @@ export default async function Home({
               price={newArrival.price}
               author={newArrival.author}
               description={newArrival.description}
-              image={"/IMazon.ico"}
+              image={newArrival.image}
               key={i}
             />
             ))
@@ -61,7 +60,7 @@ export default async function Home({
               price={newArrival.price}
               author={newArrival.author}
               description={newArrival.description}
-              image={"/IMazon.ico"}
+              image={newArrival.image}
               key={i}
             />
             ))
@@ -78,7 +77,7 @@ export default async function Home({
               price={newArrival.price}
               author={newArrival.author}
               description={newArrival.description}
-              image={"/IMazon.ico"}
+              image={newArrival.image}
               key={i}
             />
             ))
@@ -95,7 +94,7 @@ export default async function Home({
               price={newArrival.price}
               author={newArrival.author}
               description={newArrival.description}
-              image={"/IMazon.ico"}
+              image={newArrival.image}
               key={i}
             />
             ))
@@ -112,7 +111,7 @@ export default async function Home({
               price={newArrival.price}
               author={newArrival.author}
               description={newArrival.description}
-              image={"/IMazon.ico"}
+              image={newArrival.image}
               key={i}
             />
             ))

@@ -19,7 +19,6 @@ export default async function Home({
   
   const books = await getAllBooks();
   
-  
   return (
     <main className="flex min-h-screen items-start rou  nded-b-xl border-2">
       <div className="w-full flex-col justify-between">
@@ -40,7 +39,7 @@ export default async function Home({
               price={book.price}
               author={book.author}
               description={book.description}
-              image={"/IMazon.ico"}
+              image={book.image}
               // mode={mode}
               key={book.id.toString()}
             />
