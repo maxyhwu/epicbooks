@@ -1,9 +1,7 @@
 import { userType } from "@/lib/types";
 import bcrypt from "bcryptjs";
 import { useSearchParams } from "next/navigation";
-import { useState } from "react";
 export default function useUsers(){
-    const [username, setUsername] = useState<string>("");
     const searchParams = useSearchParams();
     const Register = async (password: string, email: string, username: string) => {
         const hashedPassword = await bcrypt.hash(password, 8);
@@ -69,7 +67,6 @@ export default function useUsers(){
         }
     }
     return{
-        username,
         Register,
         Login,
     };
