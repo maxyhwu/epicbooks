@@ -13,6 +13,7 @@ export type booksType = {
 };
 
 export type userType = {
+  _id: String,
   username: String,
   password: String,
   email: String,

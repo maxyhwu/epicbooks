@@ -1,17 +1,20 @@
 import dotenv from 'dotenv';
 import express from 'express';
+import bodyParser from "body-parser";
+import cors from "cors";
 import jdenticon from 'jdenticon';
 import mongoose, { ConnectOptions } from 'mongoose';
 import nodemailer from 'nodemailer';
 import { Config, adjectives, animals, colors, languages, names, uniqueNamesGenerator } from 'unique-names-generator';
-import { booksType } from './types';
+import { booksType, userType } from './types';
 
 const app = express();
 const port = process.env.PORT || 8000;
 dotenv.config();
 const mongo_uri = process.env.MONGO_URI as string;
 
-app.use(express.json());
+app.use(bodyParser.json());
+app.use(cors());
 
 // Connect to MongoDB
 mongoose.connect(mongo_uri, {
@@ -122,14 +125,14 @@ app.get('/api/getBookInfo', async (req, res) => {
 });
 
 // User APIs
-app.post('/api/login', async (req, res) => {
-    const { username, password } = req.body;
+app.get('/api/login', async (req, res) => {
+    const email = String(req.query.email);
     try {
-        const result = await usersModel.findOne({ username, password });
+        const result = await usersModel.findOne({ email });
         if (result) {
-            res.send('Login success');
+            res.send(result);
         } else {
-            res.send('Login failed');
+            res.status(500).send('Login failed');
         }
     } catch (err) {
         console.error(err);
@@ -149,8 +152,8 @@ app.post('/api/register', async (req, res) => {
     };
 
     try {
-        await usersModel.create(newUser);
-        res.send('Register success');
+        const result:userType = await usersModel.create(newUser);
+        res.send(result);
     } catch (err) {
         console.error(err);
         res.status(500).send('Register failed');
