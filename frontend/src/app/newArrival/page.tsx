@@ -4,22 +4,12 @@ import MyFavButton from "@/app/_components/MyFavButton";
 import useBooks from "@/hooks/useBook";
 import { booksType } from "@/lib/types";
 
-type Pageprops = {
-  searchParams: {
-    searchName: string;
-    mode: string;
-  };
-};
-
-export default async function Home({
-  searchParams: { searchName },
-}: Pageprops) {
+export default async function Home() {
   const { getNewArrival } = useBooks();
   const newArrivals = await getNewArrival();
   if (!newArrivals) {
     return;
   }
-  
   
   return (
     <main className="flex min-h-screen items-start rounded-b-xl border-2">
@@ -27,7 +17,6 @@ export default async function Home({
         <div className="flex justify-between px-10 item-center border-b border-b-gray-700 p-5">
           <p className="text-2xl pt-2 font-semibold">New Arrival</p>
           <div className="flex items-center justify-center gap-5 text-2xl">
-            {/* <GetSerachName /> */}
             <MyFavButton/>
             <CartButton />
           </div>
