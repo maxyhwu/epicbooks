@@ -1,11 +1,16 @@
-"use client"
-import { useRouter } from "next/navigation";
+import useBooks from "@/hooks/useBook";
+import useCarts from "@/hooks/useCart";
 import FavoriteItem from "./_components/CartItem";
-export default function CartPage(){
-    const router = useRouter();
-    const handleCheckout = () =>{
-        router.push("/cart/checkout");
-    }
+export default async function CartPage(){
+    const {getFavorite} = useCarts();   
+    const {getBookInfo} = useBooks();
+    //need user name from db
+    const FavIdList = await getFavorite("some user name") 
+    // let favItems: booksType[] = [];
+    // FavIdList?.forEach(async (fav)=>{
+    //     const favItem = await getBookInfo(fav as number);
+    //     favItems.push(favItem)
+    // })
     return(
         <div className="flex shadow-md my-3 justify-center">
             <div className="w-3/4 bg-white px-10 py-10">

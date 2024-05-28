@@ -1,12 +1,11 @@
 "use client"
-import { publicEnv } from "@/lib/env/public";
 import StarIcon from '@mui/icons-material/Star';
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-// import { getProductDetails } from "../../warehouse/_components/action";
-
+import { useRouter, useSearchParams } from "next/navigation";
 
 type BestSellingPreviewProps = {
+  isTopThree: boolean;
+  order: number;
   bookId: string;
   bookName: String;
   image: String;
@@ -16,6 +15,8 @@ type BestSellingPreviewProps = {
 };
 
 export default function BestSellingPreview({
+  isTopThree,
+  order,
   bookId,
   bookName,
   image,
@@ -25,23 +26,40 @@ export default function BestSellingPreview({
 }: BestSellingPreviewProps) {
   // const productDetails = await getProductDetails(bookId);
   const router = useRouter();
-  let minPrice = Infinity;
-  let totalQuantity = 0;
-  let totalSold = 0; 
+  const searchParams = useSearchParams();
+  const svgToDataUrl = (svgString: string): string => {
+    // Decode Unicode-escaped characters
+    const decodedSvgString = svgString.replace(/\\u([\dA-F]{4})/gi, (_, group) =>
+      String.fromCharCode(parseInt(group, 16))
+    );
+    // Convert to base64
+    const base64Svg = btoa(decodedSvgString);
+    // Create data URL
+    return `data:image/svg+xml;base64,${base64Svg}`;
+  };
 
   const handleDetail = () =>{
-    router.push(`${publicEnv.NEXT_PUBLIC_BASE_URL}/${bookId}`);
+    const params = new URLSearchParams(searchParams);
+    params.set("bookId", bookId!);
+    router.push(`/${bookId}?${params.toString()}`);
   }
 
   return (
       <div className="relative"> 
-        <StarIcon className="absolute -left-8 z-10 -top-8 h-16 w-16 text-yellow-400"></StarIcon>   
+        {isTopThree && (
+          <div className="relative">
+            <StarIcon className="absolute -left-8 z-10 -top-8 h-16 w-16 text-yellow-400" />
+            <span className="absolute -left-4 z-20 -top-4 h-8 w-8 text-black font-bold text-xl flex items-center justify-center">
+              {order}
+            </span>
+          </div>
+        )}
         <div className="h-full flex gap-5 justify-between w-full rounded-md border border-black p-3 shadow-sm bg-custom">
           {/* <div className="flex gap-5"> */}
             <div className="flex flex-col gap-2 w-1/2 min-h-full justify-between">
               <Image
                 // src={`${productDetails[0].imageLink}`}
-                src = {image.toString()}  
+                src = {svgToDataUrl(image.toString())}  
                 alt="book_pic"
                 width={200}
                 height={50}
@@ -71,7 +89,7 @@ export default function BestSellingPreview({
               <button className="text-xs absolute text-center border border-black bottom-0 right-0 m-2 bg-custom hover:bg-yellow-500 text-black py-1 px-3 rounded-2xl"
               onClick={handleDetail}>
                 More...
-                </button>
+              </button>
             </div>
           {/* </div> */}
         </div>

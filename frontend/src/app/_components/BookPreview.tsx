@@ -29,7 +29,16 @@ export default function BookPreview({
   const handleCancelSearch = () => {
     
   }
-
+  const svgToDataUrl = (svgString: string): string => {
+    // Decode Unicode-escaped characters
+    const decodedSvgString = svgString.replace(/\\u([\dA-F]{4})/gi, (_, group) =>
+      String.fromCharCode(parseInt(group, 16))
+    );
+    // Convert to base64
+    const base64Svg = btoa(decodedSvgString);
+    // Create data URL
+    return `data:image/svg+xml;base64,${base64Svg}`;
+  };
 
   const handleOnClick = () => {
     // router.push(`/main/shop/cart?${params.toString()}`);
@@ -46,7 +55,7 @@ export default function BookPreview({
           <div className="flex flex-col gap-2 w-1/2 min-h-full justify-between">
             <Image
               // src={`${productDetails[0].imageLink}`}
-              src = {image.toString()}  
+              src = {svgToDataUrl(image.toString())}  
               alt="book_pic"
               width={200}
               height={50}
