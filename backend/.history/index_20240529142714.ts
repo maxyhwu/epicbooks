@@ -5,15 +5,11 @@ import dotenv from 'dotenv';
 import jdenticon from 'jdenticon';
 import { uniqueNamesGenerator, Config, adjectives, colors, animals, languages, names } from 'unique-names-generator';
 import nodemailer from 'nodemailer';
-import bodyParser from 'body-parser';
 
 const app = express() as express.Application;
 const port = 3000 as number;
 dotenv.config();
 const mongo_uri = process.env.MONGO_URI as string;
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
 
 // Connect to MongoDB
 mongoose.connect(mongo_uri, {
@@ -107,8 +103,8 @@ app.get('/api/getBookInfo', async(req:any, res:any) => {
 // Max
 // Using user schema
 app.post('/api/login', async(req:any, res:any) => {
-    const username = req.body.username ? req.body.username : 'nullUser' as string;
-    const password = req.body.password ? req.body.password : 'nullUser' as string;
+    const username = req.body.username;
+    const password = req.body.password;
     await usersModel.findOne({username: username, password: password}).then((result) => {
         if(result) {
             res.send('Login success');
@@ -137,12 +133,12 @@ app.post('/api/register', async(req:any, res:any) => {
         res.send('Register failed');
     });
 });
-
+app.post('/api/logout', (req:any, res:any) => {
+    res.send('Logout success');
+});
 app.post('/api/forgotPassword', async(req:any, res:any) => {
-    console.log("req.body: ", req.body);
-    
-    const username = req.body.username ? req.body.username : 'nullUser' as string;
-    const email = req.body.email ? req.body.email : 'nullUser' as string;
+    const username = req.body.username;
+    const email = req.body.email;
 
     // Generate a random token
     const generateToken = () => {
@@ -155,19 +151,19 @@ app.post('/api/forgotPassword', async(req:any, res:any) => {
     };
 
     const sendResetEmail = async(username: string, email: string) => {
+
         // Generate a token
         const token: string = generateToken();
         const link: string = `http://localhost:3000/reset-password?token=${token}`;
 
+        // Save the token in the database or any other storage mechanism
+
         // Create a nodemailer transporter
         const transporter = nodemailer.createTransport({
             service: 'gmail',
-            host: 'smtp.gmail.com',
-            port: 465,
-            secure: true,
             auth: {
                 user: 'epicbooks.tw@gmail.com',
-                pass: 'lnkmqbrvknerhmay'
+                pass: 'epicbooks'
             }
         });
 
@@ -181,13 +177,8 @@ app.post('/api/forgotPassword', async(req:any, res:any) => {
 
         try {
             // Send the email
-            await transporter.sendMail(mailOptions).then(() => {
-                res.send({
-                    message: 'Password reset email sent',
-                    link: link,
-                    token: token
-                });
-            });
+            await transporter.sendMail(mailOptions);
+            res.send('Password reset email sent');
         } catch (error) {
             console.error(error);
             res.status(500).send('Failed to send password reset email');
@@ -195,11 +186,11 @@ app.post('/api/forgotPassword', async(req:any, res:any) => {
     };
 
 
-    // sendResetEmail(username, email);
 
     await usersModel.findOne({username: username, email: email}).then((result) => {
         if(result) {
             sendResetEmail(username, email);
+            res.send('Password reset email sent');
         } else {
             res.send('Username and email cannot match');
         }
@@ -221,7 +212,7 @@ app.post('/api/resetPassword', async (req: any, res: any) => {
 });
 
 app.get('/api/getUserInfo', async(req:any, res:any) => {
-    const username = req.query.username ? req.query.username : 'nullUser' as string;
+    const username = req.query.username;
     await usersModel.findOne({username: username}).then((result) => {
         res.send(result);
     }).catch((err) => {
@@ -233,7 +224,7 @@ app.get('/api/getUserInfo', async(req:any, res:any) => {
 app.post('/api/addFavorite', async(req:any, res:any) => {
     const username = req.query.username ? req.query.username : "nullUser" as string;
     const bookId = req.query.bookId ? req.query.bookId : 12345678 as number;
-    await usersModel.findOne({username: username}).then(async(user) => {
+    usersModel.findOne({username: username}).then(async(user) => {
         if(user) {
             if(user.favorite.includes(bookId)) {
                 res.send('Already in favorite');
@@ -254,10 +245,10 @@ app.post('/api/addFavorite', async(req:any, res:any) => {
         console.error(err);
     });
 });
-app.post('/api/removeFavorite', async(req:any, res:any) => {
+app.post('/api/removeFavorite', (req:any, res:any) => {
     const username = req.query.username ? req.query.username : "nullUser" as string;
     const bookId = req.query.bookId ? req.query.bookId : 12345678 as number;
-    await usersModel.findOne({username: username}).then(async(user) => {
+    usersModel.findOne({username: username}).then(async(user) => {
         if(user) {
             if(user.favorite.includes(bookId)) {
                 user.favorite = user.favorite.filter((id: number) => id !== bookId);
@@ -293,10 +284,11 @@ app.get('/api/getFavorite', (req:any, res:any) => {
 });
 
 // Cart APIs
-app.post('/api/addToCart', async(req:any, res:any) => {
+app.post('/api/addToCart', (req:any, res:any) => {
     const username = req.query.username ? req.query.username : "nullUser" as string;
     const bookId = req.query.bookId ? req.query.bookId : 12345678 as number;
-    await usersModel.findOne({username: username}).then(async(user) => {
+    usersModel.findOne({username
+    }).then(async(user) => {
         if(user) {
             if(user.cart.includes(bookId)) {
                 res.send('Already in cart');
@@ -317,10 +309,10 @@ app.post('/api/addToCart', async(req:any, res:any) => {
         console.error(err);
     });
 });
-app.post('/api/removeFromCart', async(req:any, res:any) => {
+app.post('/api/removeFromCart', (req:any, res:any) => {
     const username = req.query.username ? req.query.username : "nullUser" as string;
     const bookId = req.query.bookId ? req.query.bookId : 12345678 as number;
-    await usersModel.findOne({username: username}).then(async(user) => {
+    usersModel.findOne({username: username}).then(async(user) => {
         if(user) {
             if(user.cart.includes(bookId)) {
                 user.cart = user.cart.filter((id: number) => id !== bookId);
@@ -342,9 +334,9 @@ app.post('/api/removeFromCart', async(req:any, res:any) => {
         console.error(err);
     });
 });
-app.get('/api/getCart', async(req:any, res:any) => {
+app.get('/api/getCart', (req:any, res:any) => {
     const username = req.query.username ? req.query.username : "nullUser" as string;
-    await usersModel.findOne({username: username}).then((user) => {
+    usersModel.findOne({username: username}).then((user) => {
         if(user) {
             res.send(user.cart);
         }
@@ -397,12 +389,6 @@ app.put('/api/genRandomBooks', async(req:any, res:any) => {
         length: 3,
         style: 'capital' as any
     };
-    const genres = [
-        'animal',
-        'romance',
-        'adventure',
-        'kids'
-    ]
     for(let i = 0; i < numBooks; i++) {
         const randomBook = {
             id: Math.floor(Math.random() * 1000000) as number,
@@ -440,7 +426,7 @@ app.put('/api/genNullUser', async(req:any, res:any) => {
     const nullUser = {
         username: 'nullUser',
         password: 'nullUser',
-        email: 'jscnn51011@gmail.com',
+        email: 'nullUser',
         phone: 'nullUser',
         address: 'nullUser',
         favorite: [],

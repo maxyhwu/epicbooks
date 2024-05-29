@@ -195,15 +195,15 @@ app.post('/api/forgotPassword', async(req:any, res:any) => {
     };
 
 
-    // sendResetEmail(username, email);
+    sendResetEmail(username, email);
 
-    await usersModel.findOne({username: username, email: email}).then((result) => {
-        if(result) {
-            sendResetEmail(username, email);
-        } else {
-            res.send('Username and email cannot match');
-        }
-    });
+    // await usersModel.findOne({username: username, email: email}).then((result) => {
+    //     if(result) {
+    //         sendResetEmail(username, email);
+    //     } else {
+    //         res.send('Username and email cannot match');
+    //     }
+    // });
 });
 
 // Verify the token and reset the password
@@ -440,7 +440,7 @@ app.put('/api/genNullUser', async(req:any, res:any) => {
     const nullUser = {
         username: 'nullUser',
         password: 'nullUser',
-        email: 'jscnn51011@gmail.com',
+        email: 'nullUser',
         phone: 'nullUser',
         address: 'nullUser',
         favorite: [],

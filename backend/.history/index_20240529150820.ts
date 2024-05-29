@@ -440,7 +440,7 @@ app.put('/api/genNullUser', async(req:any, res:any) => {
     const nullUser = {
         username: 'nullUser',
         password: 'nullUser',
-        email: 'jscnn51011@gmail.com',
+        email: 'nullUser',
         phone: 'nullUser',
         address: 'nullUser',
         favorite: [],

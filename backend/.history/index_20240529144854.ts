@@ -5,15 +5,11 @@ import dotenv from 'dotenv';
 import jdenticon from 'jdenticon';
 import { uniqueNamesGenerator, Config, adjectives, colors, animals, languages, names } from 'unique-names-generator';
 import nodemailer from 'nodemailer';
-import bodyParser from 'body-parser';
 
 const app = express() as express.Application;
 const port = 3000 as number;
 dotenv.config();
 const mongo_uri = process.env.MONGO_URI as string;
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
 
 // Connect to MongoDB
 mongoose.connect(mongo_uri, {
@@ -139,8 +135,6 @@ app.post('/api/register', async(req:any, res:any) => {
 });
 
 app.post('/api/forgotPassword', async(req:any, res:any) => {
-    console.log("req.body: ", req.body);
-    
     const username = req.body.username ? req.body.username : 'nullUser' as string;
     const email = req.body.email ? req.body.email : 'nullUser' as string;
 
@@ -162,9 +156,6 @@ app.post('/api/forgotPassword', async(req:any, res:any) => {
         // Create a nodemailer transporter
         const transporter = nodemailer.createTransport({
             service: 'gmail',
-            host: 'smtp.gmail.com',
-            port: 465,
-            secure: true,
             auth: {
                 user: 'epicbooks.tw@gmail.com',
                 pass: 'lnkmqbrvknerhmay'
@@ -181,11 +172,10 @@ app.post('/api/forgotPassword', async(req:any, res:any) => {
 
         try {
             // Send the email
-            await transporter.sendMail(mailOptions).then(() => {
+            await transporter.sendMail(mailOptions).then(() => {;
                 res.send({
                     message: 'Password reset email sent',
-                    link: link,
-                    token: token
+                    link: link
                 });
             });
         } catch (error) {
@@ -195,11 +185,11 @@ app.post('/api/forgotPassword', async(req:any, res:any) => {
     };
 
 
-    // sendResetEmail(username, email);
 
     await usersModel.findOne({username: username, email: email}).then((result) => {
         if(result) {
             sendResetEmail(username, email);
+            res.send('Password reset email sent');
         } else {
             res.send('Username and email cannot match');
         }
@@ -440,7 +430,7 @@ app.put('/api/genNullUser', async(req:any, res:any) => {
     const nullUser = {
         username: 'nullUser',
         password: 'nullUser',
-        email: 'jscnn51011@gmail.com',
+        email: 'nullUser',
         phone: 'nullUser',
         address: 'nullUser',
         favorite: [],

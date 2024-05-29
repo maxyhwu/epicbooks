@@ -162,9 +162,6 @@ app.post('/api/forgotPassword', async(req:any, res:any) => {
         // Create a nodemailer transporter
         const transporter = nodemailer.createTransport({
             service: 'gmail',
-            host: 'smtp.gmail.com',
-            port: 465,
-            secure: true,
             auth: {
                 user: 'epicbooks.tw@gmail.com',
                 pass: 'lnkmqbrvknerhmay'
@@ -184,8 +181,7 @@ app.post('/api/forgotPassword', async(req:any, res:any) => {
             await transporter.sendMail(mailOptions).then(() => {
                 res.send({
                     message: 'Password reset email sent',
-                    link: link,
-                    token: token
+                    link: link
                 });
             });
         } catch (error) {
@@ -195,7 +191,6 @@ app.post('/api/forgotPassword', async(req:any, res:any) => {
     };
 
 
-    // sendResetEmail(username, email);
 
     await usersModel.findOne({username: username, email: email}).then((result) => {
         if(result) {
@@ -440,7 +435,7 @@ app.put('/api/genNullUser', async(req:any, res:any) => {
     const nullUser = {
         username: 'nullUser',
         password: 'nullUser',
-        email: 'jscnn51011@gmail.com',
+        email: 'nullUser',
         phone: 'nullUser',
         address: 'nullUser',
         favorite: [],
