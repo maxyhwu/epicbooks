@@ -1,5 +1,6 @@
 {
     "dependencies": {
+        "cors": "^2.8.5",
         "dotenv": "16.4.5",
         "express": "^4.17.1",
         "jdenticon": "2.2.0",
@@ -10,6 +11,7 @@
         "unique-names-generator": "4.7.1"
     },
     "devDependencies": {
+        "@types/cors": "^2.8.17",
         "@types/express": "^4.17.21",
         "@types/mongoose": "^5.11.97",
         "@types/nodemailer": "^6.4.15"

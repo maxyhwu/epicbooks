@@ -1,20 +1,14 @@
 "use client";
 
-import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import GetSerachName from "./GetSearchName";
 import LoginButton from "./LoginButton";
 
 export default function HeaderBar() {
-  const session = useSession();
   const router = useRouter();
   const searchParams = useSearchParams();
-  // const handleMainPage = () => {
-  //   const params = new URLSearchParams(searchParams);
-  //   // params.set("mode", "buyer"!);
-  //   router.push("");
-  // }
+  const username = searchParams.get("username") ?? "";
   const handleHome = () =>{
     router.push("/");
   }
@@ -26,6 +20,12 @@ export default function HeaderBar() {
   }
   const handleRecommmendation = () =>{
     router.push("/recommendation")
+  }
+
+  const handleLogout = () => {
+    const params = new URLSearchParams(searchParams);
+    params.set("username", "");
+    router.push(`/?${params.toString()}`);
   }
  
   return (
@@ -48,7 +48,11 @@ export default function HeaderBar() {
         <button className="text-lg underline" onClick={handleNewArrival}>New Arrival</button>
         <button className="text-lg underline" onClick={handleBestSelling}>Best Sellings</button>
         <button className="text-lg underline" onClick={handleRecommmendation}>Recommendation</button>
-        <LoginButton />
+        {username === "" ?  <LoginButton/> : 
+        <div className="flex items-center gap-4">
+          <p>Hi, {username}</p>
+          <button onClick={handleLogout} className="px-4 py-2 border border-black  bg-gray-100 rounded-md hover:bg-gray-400">Logout</button>
+        </div>}
       </div>
     </div>
   );
