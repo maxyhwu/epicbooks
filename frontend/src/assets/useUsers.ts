@@ -1,6 +1,8 @@
 import { userType } from "@/lib/types";
 import bcrypt from "bcryptjs";
+import { useSearchParams } from "next/navigation";
 export default function useUsers(){
+    const searchParams = useSearchParams();
     const getUserInfo = async(username: string) =>{
         const response  =  await fetch(`http://localhost:8000/api/getUserInfo/?username=${username}`, {
             method: 'GET',
@@ -57,11 +59,12 @@ export default function useUsers(){
             },
         });
 
+
         if (loginResponse.ok) {
             const result:userType = await loginResponse.json();
             console.log(String(result.password));
             console.log(hashedPassword);
-            const isValid = await bcrypt.compare(password, result.password as string);
+            const isValid = await bcrypt.compare(String(result.password), hashedPassword);
             if (isValid) {
                 return result;
             }

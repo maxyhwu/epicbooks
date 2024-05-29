@@ -3,6 +3,7 @@ import MyFavButton from "@/app/_components/MyFavButton";
 import useBooks from "@/hooks/useBook";
 import { booksType } from "@/lib/types";
 import RecomPreview from "./_components/RecomPreview";
+import RecomSelect from "./_components/RecomSelect";
 
 type RecomProps ={
   searchParams:{
@@ -15,6 +16,7 @@ export default async function Home({searchParams: {username}}: RecomProps) {
   const {getRecommendations} = useBooks();
   const recommendations = await getRecommendations(username);
   return (
+    // {recommendations}
     <main className="flex min-h-screen items-start rounded-b-xl border-2">
       <div className="w-full flex-col justify-between">
         <div className="flex justify-between px-10 item-center border-b border-b-gray-700 p-5">
@@ -25,9 +27,9 @@ export default async function Home({searchParams: {username}}: RecomProps) {
             <CartButton />
           </div>
         </div>
-        <div className="mt-5 grid w-full grid-cols-3 gap-10 px-10 py-5">
-        {
-            recommendations?.map((book: booksType) =>(
+        {recommendations && recommendations.length > 0 ? (
+          <div className="mt-5 grid w-full grid-cols-3 gap-10 px-10 py-5">
+            {recommendations.map((book: booksType) => (
               <RecomPreview
                 bookId={book.id.toString()}
                 bookName={book.title}
@@ -37,9 +39,11 @@ export default async function Home({searchParams: {username}}: RecomProps) {
                 image={book.image}
                 key={book.id.toString()}
               />
-            ))
-          } 
-        </div>
+            ))}
+          </div>
+        ) : (
+          <RecomSelect username={username}/>
+        )}
       </div>
     </main>
   );

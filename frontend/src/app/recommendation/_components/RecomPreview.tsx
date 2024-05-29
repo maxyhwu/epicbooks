@@ -45,7 +45,7 @@ export default function RecomPreview({
         {/* <div className="flex gap-5"> */}
           <div className="flex flex-col gap-2 w-1/2 min-h-full justify-between">
             <Image
-              src = {svgToDataUrl(image.toString())}  
+              src = {svgToDataUrl(image?.toString())}  
               alt="book_pic"
               width={200}
               height={50}
@@ -57,7 +57,7 @@ export default function RecomPreview({
                   {bookName.length < 11 ? (
                     <p className="text-sm m-1">Title: {bookName}</p>
                   ) : ( 
-                    <p className="text-sm">Title: {bookName.substring(0, 10)}...</p>
+                    <p className="text-sm">Title: {bookName?.substring(0, 10)}...</p>
                   )}
                 </div>
                 {/* <p className="text-sm font-semibold">{"NTD " + minPrice}</p> */}

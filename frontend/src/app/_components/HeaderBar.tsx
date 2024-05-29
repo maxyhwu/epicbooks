@@ -9,22 +9,46 @@ export default function HeaderBar() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const username = searchParams.get("username") ?? "";
+  const bookId = searchParams.get("bookId") ?? "";
   const handleHome = () =>{
-    router.push("/");
+    const params = new URLSearchParams(searchParams);
+    params.set("username", username);
+    if (bookId){
+      params.delete("bookId");
+    }
+    router.push(`/?${params.toString()}`);
   }
   const handleNewArrival = () =>{
-    router.push("/newArrival")
+    const params = new URLSearchParams(searchParams);
+    params.set("username", username);
+    if (bookId){
+      params.delete("bookId");
+    }
+    router.push(`/newArrival/?${params.toString()}`);
   }
   const handleBestSelling = () =>{
-    router.push("/bestselling")
+    const params = new URLSearchParams(searchParams);
+    params.set("username", username);
+    if (bookId){
+      params.delete("bookId");
+    }
+    router.push(`/bestselling/?${params.toString()}`);
   }
   const handleRecommmendation = () =>{
-    router.push("/recommendation")
+    const params = new URLSearchParams(searchParams);
+    params.set("username", username);
+    if (bookId){
+      params.delete("bookId");
+    }
+    router.push(`/recommendation/?${params.toString()}`);
   }
 
   const handleLogout = () => {
     const params = new URLSearchParams(searchParams);
     params.set("username", "");
+    if (bookId){
+      params.delete("bookId");
+    }
     router.push(`/?${params.toString()}`);
   }
  
@@ -37,9 +61,6 @@ export default function HeaderBar() {
             <Image src="/story_book.ico" alt="IMazon icon" width={45} height={25} />
             <p className="ml-2 text-4xl font-semibold text-black">ePicBook</p>
           </button>
-        {/* <p className="ml-10 tracking-wider text-black">
-          Welcome, {session.data?.user?.name}!
-        </p> */}
         <GetSerachName/>
       </div>
      
