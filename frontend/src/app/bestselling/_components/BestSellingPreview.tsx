@@ -59,7 +59,7 @@ export default function BestSellingPreview({
             <div className="flex flex-col gap-2 w-1/2 min-h-full justify-between">
               <Image
                 // src={`${productDetails[0].imageLink}`}
-                src = {svgToDataUrl(image.toString())}  
+                src = {svgToDataUrl(image?.toString())}  
                 alt="book_pic"
                 width={200}
                 height={50}
@@ -71,7 +71,7 @@ export default function BestSellingPreview({
                     {bookName.length < 11 ? (
                       <p className="text-sm m-1">Title: {bookName}</p>
                     ) : ( 
-                      <p className="text-sm m-1">Title: {bookName.substring(0, 10)}...</p>
+                      <p className="text-sm m-1">Title: {bookName?.substring(0, 10)}...</p>
                     )}
                   </div>
                   {/* <p className="text-sm font-semibold">{"NTD " + minPrice}</p> */}
@@ -80,7 +80,7 @@ export default function BestSellingPreview({
                   <p className="text-sm m-1">Author: {author}</p>
                 </div>
                 <div className="bg-white h-8 border border-black rounded-md p-0.5">
-                  <p className="text-sm m-1">Price: {price.toString()}</p>  
+                  <p className="text-sm m-1">Price: {price?.toString()}</p>  
                 </div>
               </div>
             </div>

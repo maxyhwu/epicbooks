@@ -61,6 +61,21 @@ export default function useBooks(){
         }
     }
 
+    const getRecommendations = async(genres: string) =>{
+        const response = await fetch(`http://localhost:8000/api/getRecommendations/?genres=${genres}`, {
+            method: 'GET',
+            headers:{
+                'Content-Type' : 'application/json', 
+            }
+        })
+        if(response.ok){
+            const recommendations: booksType[] = await response.json();
+            return recommendations
+        }else{
+            console.error('Failed to fetch recommendations:', response.status);
+        }
+    }
+
     const getBookInfo = async (bookId: number) =>{
         const response = await fetch(`http://localhost:8000/api/getBookInfo/?bookId=${bookId}`,{
             method: 'GET',
@@ -69,7 +84,6 @@ export default function useBooks(){
             },
         })
         if (response.ok) {
-            console.log(response);
             const bookInfo: booksType = await response.json();
             // Now books contains the parsed JSON data
             return bookInfo
@@ -83,6 +97,7 @@ export default function useBooks(){
         generateBooks,
         getBestSellings,
         getNewArrival,
+        getRecommendations,
         getBookInfo,
     };
 }

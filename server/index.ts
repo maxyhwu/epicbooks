@@ -1,7 +1,7 @@
-import dotenv from 'dotenv';
-import express from 'express';
 import bodyParser from "body-parser";
 import cors from "cors";
+import dotenv from 'dotenv';
+import express from 'express';
 import jdenticon from 'jdenticon';
 import mongoose, { ConnectOptions } from 'mongoose';
 import nodemailer from 'nodemailer';
@@ -297,6 +297,7 @@ app.get('/api/getFavorite', async (req, res) => {
     try {
         const user = await usersModel.findOne({ username });
         if (user) {
+            // const favorite: [Number] = user.favorite;
             res.send(user.favorite);
         } else {
             res.status(404).send('User not found');

@@ -1,6 +1,8 @@
 import { userType } from "@/lib/types";
 import bcrypt from "bcryptjs";
+import { useSearchParams } from "next/navigation";
 export default function useUsers(){
+    const searchParams = useSearchParams();
     const getUserInfo = async(username: string) =>{
         const response  =  await fetch(`http://localhost:8000/api/getUserInfo/?username=${username}`, {
             method: 'GET',
@@ -16,7 +18,7 @@ export default function useUsers(){
         }
     }
     const Register = async (password: string, email: string, username: string) => {
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const hashedPassword = await bcrypt.hash(password, 8);
         try {
             const registerResponse = await fetch("http://localhost:8000/api/register", {
             method: 'POST',
@@ -48,6 +50,7 @@ export default function useUsers(){
     }
 
     const Login = async(email: string, password:string) => {
+        const hashedPassword = await bcrypt.hash(password, 8);
         try {
             const loginResponse = await fetch(`http://localhost:8000/api/login/?email=${email}`, {
             method: 'GET',
@@ -56,9 +59,12 @@ export default function useUsers(){
             },
         });
 
+
         if (loginResponse.ok) {
             const result:userType = await loginResponse.json();
-            const isValid = await bcrypt.compare(password, result.password as string);
+            console.log(String(result.password));
+            console.log(hashedPassword);
+            const isValid = await bcrypt.compare(String(result.password), hashedPassword);
             if (isValid) {
                 return result;
             }
@@ -74,37 +80,9 @@ export default function useUsers(){
             console.log(error);
         }
     }
-
-    const forgotPassword = async(username: string, email:string) => {
-        try {
-            const forgotPasswordResponse = await fetch(`http://localhost:8000/api/forgotPassword`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                username,
-                email,
-            }),
-        });
-
-
-        if (forgotPasswordResponse.ok) {
-            return true;
-          } else {
-            console.error("Failed to verify email and username.");
-            return false;
-          }
-
-        }catch(error){
-            console.log(error);
-        }
-    }
-
     return{
         getUserInfo,
         Register,
         Login,
-        forgotPassword,
     };
 }

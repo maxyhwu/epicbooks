@@ -39,10 +39,6 @@ export default function BookPreview({
     // Create data URL
     return `data:image/svg+xml;base64,${base64Svg}`;
   };
-
-  const handleOnClick = () => {
-    // router.push(`/main/shop/cart?${params.toString()}`);
-  };
   const handleDetail = () =>{
     const params = new URLSearchParams(searchParams);
     params.set("bookId", bookId!);
@@ -54,8 +50,7 @@ export default function BookPreview({
         {/* <div className="flex gap-5"> */}
           <div className="flex flex-col gap-2 w-1/2 min-h-full justify-between">
             <Image
-              // src={`${productDetails[0].imageLink}`}
-              src = {svgToDataUrl(image.toString())}  
+              src = {svgToDataUrl(image?.toString())}  
               alt="book_pic"
               width={200}
               height={50}

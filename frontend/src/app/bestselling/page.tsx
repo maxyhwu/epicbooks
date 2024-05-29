@@ -5,13 +5,12 @@ import { booksType } from "@/lib/types";
 import BestSellingPreview from "./_components/BestSellingPreview";
 type Pageprops = {
   searchParams: {
-    searchName: string;
-    mode: string;
+    username: string,
   };
 };
 
 export default async function Home({
-  searchParams: { searchName, mode },
+  searchParams: { username },
 }: Pageprops) {
   const {getBestSellings} = useBooks();
   const bestsellings = await getBestSellings() ?? [];
