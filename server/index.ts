@@ -239,10 +239,16 @@ app.post('/api/resetPassword', async (req, res) => {
 });
 
 app.get('/api/getUserInfo', async (req, res) => {
-    const username = req.query.username as string;
+    const username = String(req.query.username);
     try {
-        const result = await usersModel.findOne({ username });
-        res.send(result);
+        const result:userType = await usersModel.findOne({ username });
+        if (result) {
+            res.send(result);
+        }
+        else {
+            res.status(404).send("User not found");
+        }
+        
     } catch (err) {
         console.error(err);
         res.status(500).send('Internal Server Error');
@@ -295,10 +301,10 @@ app.post('/api/removeFavorite', async (req, res) => {
 app.get('/api/getFavorite', async (req, res) => {
     const username = req.query.username as string || 'nullUser';
     try {
-        const user = await usersModel.findOne({ username });
+        const user:userType = await usersModel.findOne({ username });
         if (user) {
-            // const favorite: [Number] = user.favorite;
-            res.send(user.favorite);
+            const favList = user.favorite;
+            res.json(favList);
         } else {
             res.status(404).send('User not found');
         }

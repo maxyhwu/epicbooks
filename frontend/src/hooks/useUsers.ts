@@ -1,20 +1,78 @@
-import { userType } from "@/lib/types";
+import { booksType, userType } from "@/lib/types";
 import bcrypt from "bcryptjs";
+import { useSearchParams } from "next/navigation";
+// import { useEffect } from "react";
+import useBooks from "./useBook";
+
 export default function useUsers(){
+    // const searchParams = useSearchParams();
+    // const params = new URLSearchParams(searchParams);
+    // const username = params.get("username");
+    const { getBookInfo } = useBooks();
+    // useEffect(() => {
+    //     getUserInfo(username ?? "");
+    // }, []);
+    
     const getUserInfo = async(username: string) =>{
-        const response  =  await fetch(`http://localhost:8000/api/getUserInfo/?username=${username}`, {
+        try{
+            const response  =  await fetch(`http://localhost:8000/api/getUserInfo/?username=${username}`, {
             method: 'GET',
+            cache: "no-store",
             headers: {
                 'Content-Type': 'application/json',
             },
-        })
-        if(response.ok){
-            const userInfo: userType = await response.json()
-            return userInfo
-        }else{
-            console.error('Failed to get user info:', response.status);
+            })
+            if(response.ok){
+                const userInfo:userType = await response.json();
+                return userInfo;
+            }else{
+                console.error('Failed to get user info:', response.status);
+                return null;
+            }
+        }catch(error){
+            console.log(error);
         }
+        
     }
+
+    const isInFav = async(username: string, bookId: string) =>{
+        try{
+            const userInfo = await getUserInfo(username);
+            if (userInfo) {
+                return userInfo.favorite.includes(Number(bookId));
+            }
+            else {
+                return null;
+            }
+            
+        }catch(error){
+            console.log(error);
+        }
+        
+    }
+
+    const getUserFav = async(username: string) =>{
+        try{
+            const userInfo = await getUserInfo(username);
+            if (userInfo) {
+                userInfo.favorite.forEach(async(fav) => {
+                    const bookInfo = await getBookInfo(Number(fav));
+                    
+                })  
+                
+                
+                return null;
+            }
+            else {
+                return null;
+            }
+            
+        }catch(error){
+            console.log(error);
+        }
+        
+    }
+
     const Register = async (password: string, email: string, username: string) => {
         const hashedPassword = await bcrypt.hash(password, 10);
         try {
@@ -103,6 +161,8 @@ export default function useUsers(){
 
     return{
         getUserInfo,
+        isInFav,
+        getUserFav,
         Register,
         Login,
         forgotPassword,

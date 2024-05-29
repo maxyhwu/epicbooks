@@ -1,13 +1,15 @@
 "use client"
+import useBooks from '@/hooks/useBook';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { ChangeEvent, useState } from 'react';
 
-type RecomProp = {
-    username: string,
-}
-
-export default function RecomSelect(username:RecomProp) {
+export default function RecomSelect() {
   const categories = ["adventure", "romance", "kids", "animals"];
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const params = new URLSearchParams(searchParams);
+
 
   const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
     const category = event.target.id.replace('vertical-list-', '');
@@ -18,11 +20,28 @@ export default function RecomSelect(username:RecomProp) {
     }
   };
 
+  var queryString = "";
+  var isFirst = true;
 
   const handleSave = async () => {
-    console.log(selectedCategories); // This will log the array of selected categories
-    // Perform any save operation here, such as sending to a server
+    if (selectedCategories.length == 0) {
+      alert("Please select at least a category!");
+      return;
+    }
 
+    
+    selectedCategories.forEach((category) => {
+      if (isFirst) {
+        queryString = queryString + category;
+        isFirst = false;
+      }
+      else{
+        queryString = queryString + "," + category;
+      }
+
+    });
+    params.set("queryString", queryString!);
+    router.push("/recommendation-content?"+params.toString());
   };
 
   return (
@@ -67,6 +86,6 @@ export default function RecomSelect(username:RecomProp) {
         </nav>
         <button onClick={handleSave} className="text-center hover:bg-gray-100 border bg-white rounded-md py-1 px-6 h-25 text-base">Save</button>
       </div>
-    </div>
+</div>
   );
 }

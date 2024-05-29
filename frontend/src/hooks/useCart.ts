@@ -1,5 +1,7 @@
+import useUsers from "./useUsers";
 
 export default function useCarts(){
+    const { getUserInfo } = useUsers();
     const addToCart = async (username: string, bookId: Number) => {
         const response  =  await fetch(`http://localhost:8000/api/addToCart/?username=${username}?bookId=${bookId}` , {
             method: 'POST',
@@ -34,7 +36,7 @@ export default function useCarts(){
             }
         })
         if (response.ok) {
-            return response.json();
+            return true;
         } else {
             console.error('Failed to remove favorite:', response.status);
         }
