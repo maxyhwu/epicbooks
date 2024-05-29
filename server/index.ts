@@ -164,10 +164,14 @@ app.post('/api/logout', (req, res) => {
     res.send('Logout success');
 });
 
-app.post('/api/forgotPassword', async (req, res) => {
-    const { username, email } = req.body;
+app.post('/api/forgotPassword', async(req:any, res:any) => {
+    console.log("req.body: ", req.body);
+    
+    const username = req.body.username ? req.body.username : 'nullUser' as string;
+    const email = req.body.email ? req.body.email : 'nullUser' as string;
 
-    const generateToken = (): string => {
+    // Generate a random token
+    const generateToken = () => {
         const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
         let token = '';
         for (let i = 0; i < 10; i++) {
@@ -176,45 +180,53 @@ app.post('/api/forgotPassword', async (req, res) => {
         return token;
     };
 
-    const sendResetEmail = async (username: string, email: string) => {
+    const sendResetEmail = async(username: string, email: string) => {
+        // Generate a token
         const token: string = generateToken();
         const link: string = `http://localhost:3000/reset-password?token=${token}`;
 
+        // Create a nodemailer transporter
         const transporter = nodemailer.createTransport({
             service: 'gmail',
+            host: 'smtp.gmail.com',
+            port: 465,
+            secure: true,
             auth: {
-                user: process.env.EMAIL_USER,
-                pass: process.env.EMAIL_PASS
+                user: 'epicbooks.tw@gmail.com',
+                pass: 'lnkmqbrvknerhmay'
             }
         });
 
+        // Define the email options
         const mailOptions = {
-            from: process.env.EMAIL_USER,
+            from: 'epicbooks.tw@gmail.com',
             to: email,
             subject: 'ePicBooks Password Reset',
             text: `Hello ${username},\n\nPlease click on the following link to reset your password:\n\n${link}\n\nIf you did not request a password reset, please ignore this email.\n\nBest regards,\nThe ePicBooks Team`
         };
 
         try {
-            await transporter.sendMail(mailOptions);
-            res.send('Password reset email sent');
+            // Send the email
+            await transporter.sendMail(mailOptions).then(() => {
+                res.send({
+                    message: 'Password reset email sent',
+                    link: link,
+                    token: token
+                });
+            });
         } catch (error) {
             console.error(error);
             res.status(500).send('Failed to send password reset email');
         }
     };
 
-    try {
-        const result = await usersModel.findOne({ username, email });
-        if (result) {
-            await sendResetEmail(username, email);
+    await usersModel.findOne({username: username, email: email}).then((result: userType) => {
+        if(result) {
+            sendResetEmail(username, email);
         } else {
-            res.send('Username and email do not match');
+            res.send('Username and email cannot match');
         }
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Internal Server Error');
-    }
+    });
 });
 
 app.post('/api/resetPassword', async (req, res) => {
