@@ -53,7 +53,9 @@ export default function LoginForm() {
                 router.push(`/?${params.toString()}`);
             }
             else {
-                alert("Login failed, please try again!");
+                alert("Login failed, the email or the password may be wrong. Please try again!");
+                setEmail("");
+                setPassword("");
             }
         }catch(error){
             console.log(error);

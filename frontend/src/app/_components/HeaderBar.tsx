@@ -9,21 +9,21 @@ export default function HeaderBar() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const username = searchParams.get("username") ?? "";
+  const params = new URLSearchParams(searchParams);
   const handleHome = () =>{
-    router.push("/");
+    router.push(`/?${params.toString()}`);
   }
   const handleNewArrival = () =>{
-    router.push("/newArrival")
+    router.push(`/newArrival?${params.toString()}`)
   }
   const handleBestSelling = () =>{
-    router.push("/bestselling")
+    router.push(`/bestselling?${params.toString()}`)
   }
   const handleRecommmendation = () =>{
-    router.push("/recommendation")
+    router.push(`/recommendation?${params.toString()}`)
   }
 
   const handleLogout = () => {
-    const params = new URLSearchParams(searchParams);
     params.set("username", "");
     router.push(`/?${params.toString()}`);
   }
