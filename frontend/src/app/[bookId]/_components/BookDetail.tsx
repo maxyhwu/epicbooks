@@ -11,7 +11,7 @@ import { ChangeEvent, useState } from "react";
 
 type BookDetailProps ={
     username: string,
-    favorite: [Number],
+    favorite: Number[],
 }
 
 type combinedType = BookDetailProps & booksType;
@@ -28,8 +28,8 @@ export default function BookDetail(
     language,
     image, 
     description, 
+    favorite,
     username,
-    favorite
 }:combinedType, 
 ){
     const [buyQuantity, setBuyQuantity] = useState(1);

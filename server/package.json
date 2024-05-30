@@ -3,6 +3,7 @@
         "cors": "^2.8.5",
         "dotenv": "16.4.5",
         "express": "^4.17.1",
+        "jabber": "^1.5.3",
         "jdenticon": "2.2.0",
         "mongoose": "6.0.11",
         "nodemailer": "^6.9.13",

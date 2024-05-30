@@ -1,8 +1,10 @@
 import { booksType } from "@/lib/types";
 
+// const baseURL = "https://epicbooks-950h.onrender.com/api"
+const baseURL = "http://localhost:8000/api"
 export default function useBooks(){
     const generateBooks = async () => {
-        const response  =  await fetch("http://localhost:8000/api/genRandomBooks" , {
+        const response  =  await fetch(`${baseURL}/genRandomBooks` , {
             method: 'PUT',
             headers: {
             'Content-Type' : 'application/json',
@@ -15,7 +17,7 @@ export default function useBooks(){
         }
     }
     const getAllBooks = async () =>{
-        const response = await fetch("http://localhost:8000/api/getRandomBooks",{
+        const response = await fetch(`${baseURL}/getRandomBooks`,{
           method: 'GET',
           headers: {
             'Content-Type' : 'application/json',
@@ -31,7 +33,7 @@ export default function useBooks(){
       }
 
     const getBestSellings = async () =>{
-        const response = await fetch("http://localhost:8000/api/getBestSellings",{
+        const response = await fetch(`${baseURL}/getBestSellings`,{
             method: 'GET',
             headers: {
             'Content-Type' : 'application/json',
@@ -46,7 +48,7 @@ export default function useBooks(){
         }
     }
     const getNewArrival = async () =>{
-        const response = await fetch("http://localhost:8000/api/getNewArrival",{
+        const response = await fetch(`${baseURL}/getNewArrival`,{
             method: 'GET',
             headers: {
             'Content-Type' : 'application/json',
@@ -62,7 +64,7 @@ export default function useBooks(){
     }
 
     const getRecommendations = async(genres: string) =>{
-        const response = await fetch(`http://localhost:8000/api/getRecommendations/?genres=${genres}`, {
+        const response = await fetch(`${baseURL}/getRecommendations/?genres=${genres}`, {
             method: 'GET',
             headers:{
                 'Content-Type' : 'application/json', 
@@ -77,7 +79,7 @@ export default function useBooks(){
     }
 
     const getBookInfo = async (bookId: number) =>{
-        const response = await fetch(`http://localhost:8000/api/getBookInfo/?bookId=${bookId}`,{
+        const response = await fetch(`${baseURL}/getBookInfo/?bookId=${bookId}`,{
             method: 'GET',
             headers: {
             'Content-Type' : 'application/json',

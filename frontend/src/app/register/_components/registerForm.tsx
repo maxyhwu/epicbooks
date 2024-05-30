@@ -1,16 +1,15 @@
 "use client"
 
+import useUsers from '@/hooks/useUsers';
+import CheckIcon from '@mui/icons-material/Check';
 import EmailIcon from '@mui/icons-material/Email';
 import LockIcon from '@mui/icons-material/Lock';
+import PersonIcon from '@mui/icons-material/Person';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import PersonIcon from '@mui/icons-material/Person';
-import CheckIcon from '@mui/icons-material/Check';
 import { IconButton } from '@mui/material';
-import { signIn, useSession } from 'next-auth/react';
-import { useState } from 'react';
-import useUsers from '@/hooks/useUsers';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useState } from 'react';
 
 export default function RegisterForm() {
     const [visiblity, setVisibility] = useState(false);
@@ -65,7 +64,8 @@ export default function RegisterForm() {
         
         try {
             const newUser = await Register(password, email, name);
-            if (newUser) {
+            alert(newUser)
+            if (newUser === 'Register success') {
                 alert("Register success!");
                 const params = new URLSearchParams(searchParams);
                 params.set("username", name!);

@@ -1,8 +1,10 @@
 import { userType } from "@/lib/types";
 import bcrypt from "bcryptjs";
+//const baseURL = "https://epicbooks-950h.onrender.com/api"
+const baseURL = "http://localhost:8000/api"
 export default function useUsers(){
     const getUserInfo = async(username: string) =>{
-        const response  =  await fetch(`http://localhost:8000/api/getUserInfo/?username=${username}`, {
+        const response  =  await fetch(`${baseURL}/getUserInfo/?username=${username}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -18,7 +20,7 @@ export default function useUsers(){
     const Register = async (password: string, email: string, username: string) => {
         const hashedPassword = await bcrypt.hash(password, 10);
         try {
-            const registerResponse = await fetch("http://localhost:8000/api/register", {
+            const registerResponse = await fetch(`${baseURL}/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -32,11 +34,10 @@ export default function useUsers(){
             }),
         });
 
-
         if (registerResponse.ok) {
-            const newUser:userType = await registerResponse.json();
-            return newUser;
-
+            const response = await registerResponse.text();
+            console.log(response);
+            return response;
           } else {
             console.error("Failed to register user.");
             return null;
@@ -49,7 +50,7 @@ export default function useUsers(){
 
     const Login = async(email: string, password:string) => {
         try {
-            const loginResponse = await fetch(`http://localhost:8000/api/login/?email=${email}`, {
+            const loginResponse = await fetch(`${baseURL}/login/?email=${email}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -77,7 +78,7 @@ export default function useUsers(){
 
     const forgotPassword = async(username: string, email:string) => {
         try {
-            const forgotPasswordResponse = await fetch(`http://localhost:8000/api/forgotPassword`, {
+            const forgotPasswordResponse = await fetch(`${baseURL}/forgotPassword`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

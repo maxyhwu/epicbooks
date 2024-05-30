@@ -16,14 +16,17 @@ export default async function BookDetailPage({searchParams:{bookId, username}}: 
   const { getBookInfo } = useBooks();
   const {getUserInfo} = useUsers();
   const bookInfo = await getBookInfo(bookId);
-  const userInfo = await getUserInfo(username);
+  let userFav: Number[] = [];
+  if(username){
+    const userInfo = await getUserInfo(username);
+    userFav = (userInfo?.favorite) || [];
+  }
   return(
     <main className="flex min-h-screen items-start rounded-b-xl border-2">
     <div className="w-full flex flex-col justify-center">
       <div className="flex justify-between px-10 item-center border-b border-b-gray-700 p-5">
         <p className="text-2xl pt-2 font-semibold">Book Detail</p>
         <div className="flex items-center justify-center gap-5 text-2xl">
-          {/* <GetSerachName /> */}
           <MyFavButton/>
           <CartButton />
         </div>
@@ -43,7 +46,7 @@ export default async function BookDetailPage({searchParams:{bookId, username}}: 
             genre={bookInfo?.genre as [string]}
             language={bookInfo?.language as string}
             description={bookInfo?.description as string}
-            favorite={userInfo?.favorite as [Number]}
+            favorite={userFav}
             key={bookId}
           />
         </div>

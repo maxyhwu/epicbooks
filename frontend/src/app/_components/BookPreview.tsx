@@ -76,7 +76,7 @@ export default function BookPreview({
             </div>
           </div>
           <div className="w-1/2 relative border border-black bg-white h-full rounded-md p-2">
-            <p className="text-sm m-1"> Description: {description}</p>
+            <p className="text-sm m-1"> Description: {description?.substring(0,280)}</p>
             <button className="text-xs absolute text-center border border-black bottom-0 right-0 m-2 bg-custom hover:bg-yellow-500 text-black py-1 px-3 rounded-2xl"
             onClick={handleDetail}>
               More...
