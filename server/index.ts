@@ -8,6 +8,7 @@ import jdenticon from 'jdenticon';
 import mongoose, { ConnectOptions } from 'mongoose';
 import nodemailer from 'nodemailer';
 import { Config, adjectives, animals, colors, languages, names, uniqueNamesGenerator } from 'unique-names-generator';
+import { userType } from './types';
 
 const app = express() as express.Application;
 const port = 3000 as number;
@@ -232,11 +233,18 @@ app.post('/api/resetPassword', async(req: any, res: any) => {
     res.send('Password reset successful');
 });
 
-app.get('/api/getUserInfo', async(req:any, res:any) => {
-    const username = req.query.username ? req.query.username : 'nullUser' as string;
-    await usersModel.findOne({username: username}).then((result:any) => {
-        res.send(result);
-    }).catch((err:any) => {
+app.get('/api/getUserInfo', async (req, res) => {
+    const username = String(req.query.username);
+    try {
+        const result:userType = await usersModel.findOne({ username });
+        if (result) {
+            res.send(result);
+        }
+        else {
+            res.status(404).send("User not found");
+        }
+        
+    } catch (err) {
         console.error(err);
     });
 });
@@ -290,11 +298,16 @@ app.post('/api/removeFavorite', async(req:any, res:any) => {
         console.error(err);
     });
 });
-app.get('/api/getFavorite', (req:any, res:any) => {
-    const username = req.query.username ? req.query.username : "nullUser" as string;
-    usersModel.findOne({username: username}).then((user:any) => {
-        if(user) {
-            res.send(user.favorite);
+
+app.get('/api/getFavorite', async (req, res) => {
+    const username = req.query.username as string || 'nullUser';
+    try {
+        const user:userType = await usersModel.findOne({ username });
+        if (user) {
+            const favList = user.favorite;
+            res.json(favList);
+        } else {
+            res.status(404).send('User not found');
         }
         else {
             res.send('User not found');

@@ -1,22 +1,20 @@
 "use client"
 import useCarts from '@/hooks/useCart';
+import useUsers from '@/hooks/useUsers';
 import { booksType } from "@/lib/types";
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { IconButton } from "@mui/material";
-import { red } from "@mui/material/colors";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, useState } from "react";
+import FavIcon from './FavoriteIcon';
 
 type BookDetailProps ={
     username: string,
-    favorite: Number[],
 }
 
 type combinedType = BookDetailProps & booksType;
 
-export default function BookDetail(
+export default async function BookDetail(
 {   id, 
     price, 
     title, 
@@ -28,18 +26,14 @@ export default function BookDetail(
     language,
     image, 
     description, 
-    favorite,
     username,
 }:combinedType, 
 ){
     const [buyQuantity, setBuyQuantity] = useState(1);
     const router = useRouter();
-    const [isFav, setIsFav] = useState(false);
-    favorite.forEach((fav) =>{
-        if(fav === id){
-            setIsFav(true);
-        }
-    })
+    const { isInFav } = useUsers();
+    const isFav = await isInFav(username, String(id));
+
     const {addFavorite, addToCart} = useCarts();
     const svgToDataUrl = (svgString: string): string => {
         // Decode Unicode-escaped characters
@@ -79,8 +73,7 @@ export default function BookDetail(
            return;
         }
         const resp = await addFavorite(username, id);
-        alert(resp);
-        // router.refresh();
+        router.refresh();
     }
 
     return(
@@ -94,8 +87,8 @@ export default function BookDetail(
               className="border border-black rounded-md p-0.5 bg-white"
             ></Image>
             <div className="flex gap-2 w-full justify-center">
-                {genre?.map((g) => 
-                    (<p className="text-3xl text-center font-bold">#{g}</p>)
+                {genre?.map((g, i) => 
+                    (<p className="text-3xl text-center font-bold" key={i}>#{g}</p>)
                 )}
             </div>
         </div>
@@ -107,17 +100,17 @@ export default function BookDetail(
                 <p className="text-2xl mb-1">Publisher: {publisher}</p>
                 <p className="text-2xl mb-1">Published Date: {publishDate?.toString().substring(0,10)} </p>
                 <p className="text-2xl mb-2">Language: {language}</p>
-                <div className="block h-64 w-[650px] p-2 bg-white border border-gray-200 rounded-lg shadow bg-white dark:border-gray-700 text-lg">
+                <div className="block h-64 w-[650px] p-2 border border-gray-200 rounded-lg shadow bg-white dark:border-gray-700 text-lg">
                     Description: {description}
                 </div>
             </div>
             <div className="flex flex-row mt-3 gap-5">
                 <div onClick={(e)=>handleFav(e)} className="flex justify-center item-center border border-black bg-white rounded-md p-0.5 w-25 h-25">
                     <IconButton className="hover:text-lime-700">
-                        {isFav ? <FavoriteIcon sx={{ color: red[500] }}/> : <FavoriteBorderIcon />}
+                        <FavIcon isFav={isFav ?? false}/>
                     </IconButton>
                 </div>
-                <input type='number' value={buyQuantity} className='w-12 border ml-1 rounded-md text-center border border-black' onChange={handleOnChange}></input>
+                <input type='number' value={buyQuantity} className='w-12 ml-1 rounded-md text-center border border-black' onChange={handleOnChange}></input>
                 <button onClick={handleAddToCart} className="text-center border border-black bg-white rounded-md py-1 px-6 h-25 text-lg hover:bg-gray-200">Add To My Cart</button>
                 <p className="mt-5"> {sales?.toString()} people had bought it</p>
             </div>

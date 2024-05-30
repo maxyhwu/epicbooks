@@ -1,6 +1,7 @@
-// const baseURL = "https://epicbooks-950h.onrender.com/api"
+import useUsers from "./useUsers";
 const baseURL = "http://localhost:8000/api"
 export default function useCarts(){
+    const { getUserInfo } = useUsers();
     const addToCart = async (username: string, bookId: Number) => {
         const response  =  await fetch(`${baseURL}/addToCart/?username=${username}?bookId=${bookId}` , {
             method: 'POST',
@@ -64,7 +65,7 @@ export default function useCarts(){
             }
         })
         if (response.ok) {
-            return response.json();
+            return true;
         } else {
             console.error('Failed to remove favorite:', response.status);
         }

@@ -1,8 +1,8 @@
 "use client"
 import { publicEnv } from "@/lib/env/public";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-// import { getProductDetails } from "../../warehouse/_components/action";
+import { useRouter, useSearchParams } from "next/navigation";
+
 
 type RecomPreviewProps = {
   bookId: string;
@@ -23,7 +23,9 @@ export default function RecomPreview({
   description,
   // mode,
 }: RecomPreviewProps) {
-  // const productDetails = await getProductDetails(bookId);
+  
+  const searchParams = useSearchParams();
+  
   const router = useRouter();
   const svgToDataUrl = (svgString: string): string => {
     // Decode Unicode-escaped characters
@@ -37,7 +39,9 @@ export default function RecomPreview({
   };
 
   const handleDetail = () =>{
-    router.push(`${publicEnv.NEXT_PUBLIC_BASE_URL}/${bookId}`);
+    const params = new URLSearchParams(searchParams);
+    params.set("bookId", bookId!);
+    router.push(`/${bookId}?${params.toString()}`);
   }
 
   return (

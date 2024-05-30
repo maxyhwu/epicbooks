@@ -1,6 +1,5 @@
 import CartButton from "@/app/_components/CartButton";
 import useBooks from "@/hooks/useBook";
-import useUsers from "@/hooks/useUsers";
 import MyFavButton from "../_components/MyFavButton";
 import BookDetail from "./_components/BookDetail";
 
@@ -14,13 +13,12 @@ type Pageprops = {
 // export default ProductPage;
 export default async function BookDetailPage({searchParams:{bookId, username}}: Pageprops){
   const { getBookInfo } = useBooks();
-  const {getUserInfo} = useUsers();
+  // const { isInFav } = useUsers();
   const bookInfo = await getBookInfo(bookId);
-  let userFav: Number[] = [];
-  if(username){
-    const userInfo = await getUserInfo(username);
-    userFav = (userInfo?.favorite) || [];
-  }
+  // const isFav = await isInFav(username, String(bookId))
+  
+  
+  
   return(
     <main className="flex min-h-screen items-start rounded-b-xl border-2">
     <div className="w-full flex flex-col justify-center">
@@ -46,7 +44,6 @@ export default async function BookDetailPage({searchParams:{bookId, username}}: 
             genre={bookInfo?.genre as [string]}
             language={bookInfo?.language as string}
             description={bookInfo?.description as string}
-            favorite={userFav}
             key={bookId}
           />
         </div>
