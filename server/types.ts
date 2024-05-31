@@ -12,6 +12,11 @@ export type booksType = {
   description: String,
 };
 
+export type cartItem ={
+  itemId: Number,
+  quantity: Number,
+}
+
 export type userType = {
   _id: String,
   username: String,
@@ -20,6 +25,6 @@ export type userType = {
   phone: String,
   address: String,
   favorite: [Number],
-  cart: [Number],
+  cart: [cartItem],
   salesCart: [Number]
 };

@@ -8,7 +8,7 @@ import jdenticon from 'jdenticon';
 import mongoose, { ConnectOptions } from 'mongoose';
 import nodemailer from 'nodemailer';
 import { Config, adjectives, animals, colors, languages, names, uniqueNamesGenerator } from 'unique-names-generator';
-import { booksType, userType } from './types';
+import { booksType, cartItem, userType } from './types';
 
 const app = express() as express.Application;
 const port = 8000 as number;
@@ -32,11 +32,10 @@ db.once('open', () => {
 });
 
 
-const cartItemSchema = new mongoose.Schema({
-    itemId: Number,
-    quantity: Number
-});
-
+// const cartItemSchema = new mongoose.Schema({
+//     itemId: Number,
+//     quantity: Number,
+// });
 
 const booksSchema = new mongoose.Schema({
     id: Number,
@@ -59,12 +58,13 @@ const usersSchema = new mongoose.Schema({
     phone: String,
     address: String,
     favorite: [Number],
-    cart: [cartItemSchema],
+    cart: [] as cartItem[],
     salesCart: [Number]
 });
 
 const booksModel = mongoose.model('books', booksSchema);
 const usersModel = mongoose.model('users', usersSchema);
+// const itemModel = mongoose.model("item", cartItemSchema)
 
 app.get('/api', (req:any, res:any) => {
     res.send('Hello World!');
@@ -329,47 +329,49 @@ app.get('/api/getFavorite', async (req, res) => {
 // Cart APIs
 app.post('/api/addToCart', async(req:any, res:any) => {
     const username = req.query.username ? req.query.username : "nullUser" as string;
-    const bookId = req.query.bookId ? req.query.bookId : 12345678 as number;
+    const bookId = Number(req.query.bookId) || 12345678;
     const quantity = Number(req.query.quantity) || 1;
     const user = await usersModel.findOne({ username });
     if (user) {
-        const cartItem = user.cart.find((item: booksType) => item.id === bookId);
+        const cartItem = user.cart.find((item: cartItem) => item.itemId === bookId);
         if (cartItem) {
+            user.cart = user.cart.filter((item: cartItem) => item.itemId !== bookId);
+            console.log(user.cart)
             cartItem.quantity += quantity;
+            user.cart.push(cartItem);
+            await user.save();
+            res.send('Added another to cart');
         } else {
             user.cart.push({ itemId: bookId, quantity });
-        }
-        await user.save();
-        res.send('Added to cart');
+            await user.save();
+            res.send('Added to cart');
+        } 
     } else {
         res.status(404).send('User not found');
     }
 });
 
 app.post('/api/removeFromCart', async(req:any, res:any) => {
-    const username = req.query.username ? req.query.username : "nullUser" as string;
-    const bookId = req.query.bookId ? req.query.bookId : 12345678 as number;
-    await usersModel.findOne({username: username}).then(async(user:any) => {
-        if(user) {
-            if(user.cart.includes(bookId)) {
-                user.cart = user.cart.filter((id: number) => id !== bookId);
-                await usersModel.updateOne({username: username}, user).then(() => {
-                    res.send('Removed from cart');
-                }).catch((err:any) => {
-                    console.error(err);
-                });
-            }
-            else {
+    const username = req.query.username as string || 'nullUser';
+    const bookId = Number(req.query.bookId) || 12345678;
+    try {
+        const user = await usersModel.findOne({ username });
+        if (user) {
+            const cartItem = user.cart.find((item: cartItem) => item.itemId === bookId);
+            if (cartItem) {
+                user.cart = user.cart.filter((item: cartItem) => item.itemId !== bookId);
+                await user.save();
+                res.send('Removed from cart');
+            } else {
                 res.send('Not in cart');
             }
+            
+        } else {
+            res.status(404).send('User not found');
         }
-        else {
-            res.send('User not found');
-        }
+    } catch (error) {
+        res.status(500).send(error);
     }
-    ).catch((err:any) => {
-        console.error(err);
-    });
 });
 app.get('/api/getCart', async(req:any, res:any) => {
     const username = req.query.username ? req.query.username : "nullUser" as string;

@@ -10,8 +10,9 @@ type Pageprops = {
 
 type SummaryProps = {
     bookId: Number;
+    title: String;
     quantity: Number;
-    price: Number
+    price: Number;
 }
   
 export default async function CartPage({searchParams:{username}}: Pageprops){
@@ -25,6 +26,7 @@ export default async function CartPage({searchParams:{username}}: Pageprops){
             const bookInfo = await getBookInfo(Number(cart.itemId))
             const temp = {
                 bookId: Number(cart.itemId),
+                title: bookInfo?.title,
                 quantity: cart.quantity,
                 price: bookInfo?.price
             } as SummaryProps
@@ -59,7 +61,7 @@ export default async function CartPage({searchParams:{username}}: Pageprops){
                     }   
                 </div>
             </div>
-            <Summary summaries={summary}/>
+            <Summary summaries={summary} username={username} />
         </div>
 
     );

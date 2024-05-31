@@ -1,17 +1,23 @@
 "use client"
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 type SummaryProps = {
     bookId: Number;
     quantity: Number;
     price: Number;
+    title: String;
 }
 type Pageprops={
     summaries: SummaryProps[];
+    username: string;
 }
-export default function Summary({summaries}:Pageprops){
+export default function Summary({summaries, username}:Pageprops){
     const router = useRouter();
+    const searchParams = useSearchParams();
+    // const username = searchParams.get("username") ?? "";
+    const params = new URLSearchParams(searchParams);
     const handleCheckout = () =>{
-        router.push("/cart/checkout");
+        params.set("username", username)
+        router.push(`/cart/checkout/?${params.toString()}`);
     }
     let eachCost: number[] = [];
     let totalCost: number= 0
@@ -24,9 +30,9 @@ export default function Summary({summaries}:Pageprops){
                 <h1 className="font-semibold text-2xl border-b pb-8">Order Summary</h1>
                 {   
                     summaries.map((summary, index) => (
-                        <div className="flex justify-between mt-10 mb-5">
-                            <span className="font-semibold text-sm uppercase">Items {index+1}</span>
-                            <span className="font-semibold text-sm"> $ {eachCost[index].toString()}</span>
+                        <div className="flex justify-between mt-10 mb-5 overscroll-contain">
+                            <span className="font-semibold text-sm uppercase">{summary.title}</span>
+                            <span className="font-semibold text-sm"> ${eachCost[index].toString()}</span>
                         </div>
                     ))
                 }   

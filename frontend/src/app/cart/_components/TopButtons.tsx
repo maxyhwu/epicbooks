@@ -1,12 +1,17 @@
 "use client"
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 export default function TopButton(){
     const router = useRouter()
+    const searchParams = useSearchParams();
+    const username = searchParams.get("username") ?? "";
+    const params = new URLSearchParams(searchParams);
     const handleBackToCart = () => {
-        router.push("./")
+        params.set("username", username);
+        router.push(`./?${params.toString()}`)
     }
     const handleConfirm = () => {
-        router.push("./success")
+        params.set("username", username);
+        router.push(`./success/?${params.toString()}`)
     }
     return(
         <>

@@ -1,5 +1,7 @@
 import useBooks from "@/hooks/useBook";
 import Image from "next/image";
+import ChangeQuantity from "./ChangeQuantity";
+import RemoveButton from "./RemoveButton";
 type CartProps ={
     bookId: Number;
     quantity: Number;
@@ -32,7 +34,7 @@ export default async function CartItem({ bookId, quantity, username }:CartProps)
                             alt="book_pic"
                             width={200}
                             height={50}
-                            className="max-h-48 min-h-48 bg-slate-100 rounded-md"
+                            className="max-h-48 min-h-48 min-w-48 max-w-48 bg-slate-100 rounded-md"
                         ></Image>
                     </div>
                     <div className="flex flex-col justify-between ml-4 flex-grow">
@@ -40,16 +42,10 @@ export default async function CartItem({ bookId, quantity, username }:CartProps)
                             <span className="font-bold text-md">Name: {bookInfo?.title}</span>
                             <span className="text-red-500 text-sm font-semibold">Author: {bookInfo?.author}</span>
                         </div>
-                        <button className="font-semibold hover:text-red-500 text-gray-500 text-md text-left">Remove</button>
+                        <RemoveButton username={username} bookId={bookId}/>
                     </div>
                 </div>
-                <div className="flex justify-center w-1/5">
-                    <svg className="fill-current text-gray-600 w-3" viewBox="0 0 448 512"><path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
-                    <input className="mx-2 border text-center w-8" type="text" value={Number(quantity)} />
-                    <svg className="fill-current text-gray-600 w-3" viewBox="0 0 448 512">
-                        <path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/>
-                    </svg>
-                </div>
+                <ChangeQuantity quantity={quantity} bookId={bookId} username={username}/>
                 <span className="text-center w-1/5 font-semibold text-sm">${bookInfo?.price.toString()}</span>
                 <span className="text-center w-1/5 font-semibold text-sm">${eachTotal.toString()}</span>
             </div>
