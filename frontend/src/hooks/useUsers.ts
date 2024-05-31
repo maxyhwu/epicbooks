@@ -3,18 +3,16 @@ import bcrypt from "bcryptjs";
 // import { useEffect } from "react";
 import useBooks from "./useBook";
 const baseURL = "http://localhost:8000/api"
+// const baseURL = "https://epicbooks-950h.onrender.com/api"
 export default function useUsers(){
     // const searchParams = useSearchParams();
     // const params = new URLSearchParams(searchParams);
     // const username = params.get("username");
     const { getBookInfo } = useBooks();
-    // useEffect(() => {
-    //     getUserInfo(username ?? "");
-    // }, []);
     
     const getUserInfo = async(username: string) =>{
         try{
-            const response  =  await fetch(`http://localhost:8000/api/getUserInfo/?username=${username}`, {
+            const response  =  await fetch(`${baseURL}/getUserInfo/?username=${username}`, {
             method: 'GET',
             cache: "no-store",
             headers: {
@@ -35,6 +33,8 @@ export default function useUsers(){
     }
 
     const isInFav = async(username: string, bookId: string) =>{
+        if(!username)
+            return null
         try{
             const userInfo = await getUserInfo(username);
             if (userInfo) {

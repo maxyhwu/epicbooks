@@ -1,5 +1,4 @@
 "use client"
-import { publicEnv } from "@/lib/env/public";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -61,7 +60,7 @@ export default function RecomPreview({
                   {bookName.length < 11 ? (
                     <p className="text-sm m-1">Title: {bookName}</p>
                   ) : ( 
-                    <p className="text-sm">Title: {bookName?.substring(0, 10)}...</p>
+                    <p className="text-sm m-1">Title: {bookName?.substring(0, 10)}...</p>
                   )}
                 </div>
                 {/* <p className="text-sm font-semibold">{"NTD " + minPrice}</p> */}

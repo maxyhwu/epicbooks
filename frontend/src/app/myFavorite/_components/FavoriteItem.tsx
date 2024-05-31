@@ -1,5 +1,4 @@
 import useBooks from "@/hooks/useBook";
-import useCarts from "@/hooks/useCart";
 import Image from "next/image";
 import RemoveButton from "./removeButton";
 type FavoriteProps ={
@@ -20,8 +19,6 @@ export default async function FavoriteItem({ bookId, username }:FavoriteProps){
         // Create data URL
         return `data:image/svg+xml;base64,${base64Svg}`;
     };
-
-    
 
     return(
         <div className="border-b border-b-slate-200">

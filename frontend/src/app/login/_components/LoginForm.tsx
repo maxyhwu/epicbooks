@@ -1,6 +1,5 @@
 "use client"
 import useUsers from '@/hooks/useUsers';
-import { userType } from '@/lib/types';
 import EmailIcon from '@mui/icons-material/Email';
 import LockIcon from '@mui/icons-material/Lock';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -59,6 +58,7 @@ export default function LoginForm() {
             }
         }catch(error){
             console.log(error);
+            return;
         }
 
     }

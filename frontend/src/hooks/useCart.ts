@@ -1,9 +1,8 @@
-import useUsers from "./useUsers";
 const baseURL = "http://localhost:8000/api"
+//const baseURL = "https://epicbooks-950h.onrender.com/api"
 export default function useCarts(){
-    const { getUserInfo } = useUsers();
-    const addToCart = async (username: string, bookId: Number) => {
-        const response  =  await fetch(`${baseURL}/addToCart/?username=${username}?bookId=${bookId}` , {
+    const addToCart = async (username: string, bookId: Number, quantity: Number) => {
+        const response  =  await fetch(`${baseURL}/addToCart/?username=${username}&bookId=${bookId}&quantity=${quantity}` , {
             method: 'POST',
             headers: {
             'Content-Type' : 'application/json',
@@ -52,7 +51,8 @@ export default function useCarts(){
             }
         })
         if (response.ok) {
-            return true;
+            const responseText = response.text();
+            return responseText;
         } else {
             console.error('Failed to add favorite:', response.status);
         }
@@ -85,7 +85,7 @@ export default function useCarts(){
         }
     }
     const addToSalesCart = async (username: string, bookId: Number) => {
-        const response  =  await fetch(`${baseURL}/addToSalesCart/?username=${username}?bookId=${bookId}` , {
+        const response  =  await fetch(`${baseURL}/addToSalesCart/?username=${username}&bookId=${bookId}` , {
             method: 'POST',
             headers: {
             'Content-Type' : 'application/json',

@@ -1,5 +1,6 @@
 import CartButton from "@/app/_components/CartButton";
 import useBooks from "@/hooks/useBook";
+import useUsers from "@/hooks/useUsers";
 import MyFavButton from "../_components/MyFavButton";
 import BookDetail from "./_components/BookDetail";
 
@@ -13,10 +14,9 @@ type Pageprops = {
 // export default ProductPage;
 export default async function BookDetailPage({searchParams:{bookId, username}}: Pageprops){
   const { getBookInfo } = useBooks();
-  // const { isInFav } = useUsers();
+  const { isInFav } = useUsers();
   const bookInfo = await getBookInfo(bookId);
-  // const isFav = await isInFav(username, String(bookId))
-  
+  const isFav = await isInFav(username, String(bookId))
   
   
   return(
@@ -44,6 +44,7 @@ export default async function BookDetailPage({searchParams:{bookId, username}}: 
             genre={bookInfo?.genre as [string]}
             language={bookInfo?.language as string}
             description={bookInfo?.description as string}
+            isFav={isFav as boolean}
             key={bookId}
           />
         </div>

@@ -20,5 +20,6 @@ export type userType = {
   phone: String,
   address: String,
   favorite: [Number],
-  cart: [Number]
+  cart: [Number],
+  salesCart: [Number]
 };
