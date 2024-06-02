@@ -10,7 +10,7 @@ type CheckoutItemProps = {
 
 export default async function CheckoutItem({ title, author, quantity, price, image }:CheckoutItemProps){
     let eachTotal = 0;
-    eachTotal = Number(price)*Number(quantity)*0.8
+    eachTotal = Math.floor(Number(price)*Number(quantity)*0.8)
     const svgToDataUrl = (svgString: string): string => {
         // Decode Unicode-escaped characters
         const decodedSvgString = svgString.replace(/\\u([\dA-F]{4})/gi, (_, group) =>

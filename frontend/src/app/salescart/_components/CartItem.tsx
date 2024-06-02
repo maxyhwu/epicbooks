@@ -12,7 +12,7 @@ export default async function CartItem({ bookId, quantity, username }:CartProps)
     const { getBookInfo } = useBooks();
     const bookInfo = await getBookInfo(Number(bookId));
     let eachTotal = 0;
-    eachTotal = Number(bookInfo?.price)*Number(quantity)*0.8;
+    eachTotal = Math.floor(Number(bookInfo?.price)*Number(quantity)*0.8);
     const svgToDataUrl = (svgString: string): string => {
         // Decode Unicode-escaped characters
         const decodedSvgString = svgString.replace(/\\u([\dA-F]{4})/gi, (_, group) =>
@@ -46,7 +46,7 @@ export default async function CartItem({ bookId, quantity, username }:CartProps)
                     </div>
                 </div>
                 <ChangeQuantity quantity={quantity} bookId={bookId} username={username}/>
-                <span className="text-center w-1/5 font-semibold text-sm">${(Number(bookInfo?.price)*0.8).toString()}</span>
+                <span className="text-center w-1/5 font-semibold text-sm">${(Math.floor(Number(bookInfo?.price)*0.8)).toString()}</span>
                 <span className="text-center w-1/5 font-semibold text-sm">${eachTotal.toString()}</span>
             </div>
         </div>

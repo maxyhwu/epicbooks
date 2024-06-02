@@ -22,8 +22,8 @@ export default function Summary({summaries, username}:Pageprops){
     let eachCost: number[] = [];
     let totalCost: number= 0
     summaries.forEach((summary, index) =>{
-        totalCost += Number(summary.price)*Number(summary.quantity)
-        eachCost[index] = Number(summary.price)*Number(summary.quantity)
+        totalCost += Math.floor(Number(summary.price)*Number(summary.quantity)*0.8)
+        eachCost[index] = Math.floor(Number(summary.price)*Number(summary.quantity)*0.8)
     })
     return(
         <div id="summary" className="w-1/4 px-8 py-10">

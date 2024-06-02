@@ -17,7 +17,7 @@ const mongo_uri = process.env.MONGO_URI as string;
 
 app.use(bodyParser.json());
 app.use(cors());
-// app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Connect to MongoDB
 mongoose.connect(mongo_uri, {

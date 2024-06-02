@@ -28,7 +28,7 @@ export default async function CheckoutPage({searchParams:{username}}: Pageprops)
     if(cartItems){
         const checkoutPromise = cartItems?.map( async (cart) =>{
             const book = await getBookInfo(Number(cart.itemId))
-            totalCost = Number(totalCost) + Number(book?.price)*Number(cart.quantity)*0.8
+            totalCost = Math.floor(Number(totalCost) + Number(book?.price)*Number(cart.quantity)*0.8)
             const temp = {
                 id: book?.id.toString(),
                 title: book?.title,
