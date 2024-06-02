@@ -13,14 +13,12 @@ export default function ChangeQuantity({quantity, username, bookId}: Pageprops){
     const {addToCart} = useCarts()
     const handleRemoveItem = async(e: React.MouseEvent<HTMLButtonElement>) =>{
         e.preventDefault();
-        const resp= await addToCart(username.toString(), bookId, 1);
-        alert(resp)
+        const resp= await addToCart(username.toString(), bookId, -1);
         router.refresh();
     }
     const handleAddItem = async(e: React.MouseEvent<HTMLButtonElement>) =>{
         e.preventDefault();
-        const resp= await addToCart(username.toString(), bookId, -1);
-        alert(resp)
+        const resp= await addToCart(username.toString(), bookId, 1);
         router.refresh();
     }
     return(

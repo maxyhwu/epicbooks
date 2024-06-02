@@ -15,7 +15,7 @@ export default function Summary({summaries, username}:Pageprops){
     const searchParams = useSearchParams();
     // const username = searchParams.get("username") ?? "";
     const params = new URLSearchParams(searchParams);
-    const handleCheckout = () =>{
+    const handleCheckout = async() => {
         params.set("username", username)
         router.push(`/cart/checkout/?${params.toString()}`);
     }

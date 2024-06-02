@@ -12,9 +12,7 @@ export default function RemoveButton( { bookId, username }: removeButtonProps ) 
 
     const handleRemove = async(e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
-        alert(bookId)
         const resp= await removeFromCart(username, bookId);
-        alert(resp)
         router.refresh();
     }
 

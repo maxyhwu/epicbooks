@@ -333,19 +333,22 @@ app.post('/api/addToCart', async(req:any, res:any) => {
     const quantity = Number(req.query.quantity) || 1;
     const user = await usersModel.findOne({ username });
     if (user) {
-        const cartItem = user.cart.find((item: cartItem) => item.itemId === bookId);
-        if (cartItem) {
-            user.cart = user.cart.filter((item: cartItem) => item.itemId !== bookId);
-            console.log(user.cart)
-            cartItem.quantity += quantity;
-            user.cart.push(cartItem);
-            await user.save();
+        const idList:Number[] = [];
+        user.cart.forEach((item:cartItem) => {
+            idList.push(item.itemId);
+        });
+        const index = idList.findIndex((id) => id === bookId);
+        if (index != -1) {
+            const newQuantity =  Number(user.cart[index].quantity) + quantity;   
+            await usersModel.updateOne({ username }, {$set: {[`cart.${index}.quantity`]: newQuantity}});
             res.send('Added another to cart');
         } else {
             user.cart.push({ itemId: bookId, quantity });
             await user.save();
             res.send('Added to cart');
-        } 
+        }
+
+        // await user.save();
     } else {
         res.status(404).send('User not found');
     }
@@ -373,6 +376,26 @@ app.post('/api/removeFromCart', async(req:any, res:any) => {
         res.status(500).send(error);
     }
 });
+
+app.post('/api/clearCart', async(req:any, res:any) => {
+    const username = req.query.username as string || 'nullUser';
+    try {
+        const user = await usersModel.findOne({ username });
+        if (user) {
+            user.cart = [];
+            await usersModel.updateOne({username: username}, user).then(() => {
+                res.send('Clear the cart');
+            }).catch((err:any) => {
+                console.error(err);
+            });
+        } else {
+            res.status(404).send('User not found');
+        }
+    } catch (error) {
+        res.status(500).send(error);
+    }
+});
+
 app.get('/api/getCart', async(req:any, res:any) => {
     const username = req.query.username ? req.query.username : "nullUser" as string;
     await usersModel.findOne({username: username}).then((user:any) => {

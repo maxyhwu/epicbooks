@@ -29,6 +29,20 @@ export default function useCarts(){
             console.error('Failed to remove from cart:', response.status);
         }
     }
+    const clearCart = async (username: string) => {
+        const response  =  await fetch(`${baseURL}/clearCart/?username=${username}` , {
+            method: 'POST',
+            headers: {
+            'Content-Type' : 'application/json',
+            }
+        })
+        if (response.ok) {
+            const responseText = response.text();
+            return responseText;
+        } else {
+            console.error('Failed to remove from cart:', response.status);
+        }
+    }
     const getCart = async (username: string) =>{
         const response = await fetch(`${baseURL}/getCart/?username=${username}`, {
             method: 'GET',
@@ -133,6 +147,7 @@ export default function useCarts(){
         removeFavorite,
         addToCart,
         removeFromCart,
+        clearCart,
         getCart,
         addToSalesCart,
         removeFromSalesCart,

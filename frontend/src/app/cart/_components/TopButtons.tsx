@@ -1,7 +1,15 @@
 "use client"
+import useCarts from "@/hooks/useCart";
+import { cartItem } from "@/lib/types";
 import { useRouter, useSearchParams } from "next/navigation";
-export default function TopButton(){
+
+type ConfirmProps = {
+    cartItems: cartItem[];
+}
+
+export default function TopButton({cartItems}: ConfirmProps){
     const router = useRouter()
+    const {clearCart} = useCarts()
     const searchParams = useSearchParams();
     const username = searchParams.get("username") ?? "";
     const params = new URLSearchParams(searchParams);
@@ -9,9 +17,16 @@ export default function TopButton(){
         params.set("username", username);
         router.push(`./?${params.toString()}`)
     }
-    const handleConfirm = () => {
+    const handleConfirm = async() => {
+        try {
+            const resp = await clearCart(username)
+            console.log(resp)
+        } catch (error) {
+            console.log(error)
+        }
         params.set("username", username);
         router.push(`./success/?${params.toString()}`)
+        router.refresh()
     }
     return(
         <>
