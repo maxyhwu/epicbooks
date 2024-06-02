@@ -10,12 +10,14 @@
         "mongoose": "6.0.11",
         "@huggingface/inference": "2.7.0",
         "txtgen": "3.0.7",
-        "jabber": "1.5.3"
+        "jabber": "1.5.3",
+        "cors": "2.8.5"
     },
     "devDependencies": {
         "@types/express": "^4.17.21",
         "@types/mongoose": "^5.11.97",
-        "@types/nodemailer": "^6.4.15"
+        "@types/nodemailer": "^6.4.15",
+        "@types/cors": "2.8.17"
     },
     "scripts": {
         "start": "npx ts-node ./index.ts"
