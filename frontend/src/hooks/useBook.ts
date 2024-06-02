@@ -79,6 +79,7 @@ export default function useBooks(){
     const getBookInfo = async (bookId: number) =>{
         const response = await fetch(`http://localhost:8000/api/getBookInfo/?bookId=${bookId}`,{
             method: 'GET',
+            cache: "no-store",
             headers: {
             'Content-Type' : 'application/json',
             },

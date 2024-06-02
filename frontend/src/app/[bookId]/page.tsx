@@ -14,9 +14,9 @@ type Pageprops = {
 // export default ProductPage;
 export default async function BookDetailPage({searchParams:{bookId, username}}: Pageprops){
   const { getBookInfo } = useBooks();
-  // const { isInFav } = useUsers();
+  const { isInFav } = useUsers();
   const bookInfo = await getBookInfo(bookId);
-  // const isFav = await isInFav(username, String(bookId))
+  const isFav = await isInFav(username, String(bookId))
   
   
   
@@ -47,6 +47,7 @@ export default async function BookDetailPage({searchParams:{bookId, username}}: 
             language={bookInfo?.language as string}
             description={bookInfo?.description as string}
             key={bookId}
+            isFav={isFav ?? false}
           />
         </div>
       </div>

@@ -229,13 +229,23 @@ app.post('/api/forgotPassword', async(req:any, res:any) => {
     });
 });
 
-app.post('/api/resetPassword', async (req, res) => {
+app.post('/api/resetPassword', async(req: any, res: any) => {
     const { token, newPassword } = req.body;
 
-    // Verify the token and reset the password logic goes here
-    // ...
+    // Find the user with the token
+    await usersModel.findOne({ token: token }).then(async (user: any) => {
+        if (!user) {
+            return res.status(401).send('Invalid or expired token');
+        }
 
-    res.send('Password reset successful');
+        // Update the user's password
+        user.password = newPassword;
+        user.token = undefined;
+
+        // Save the updated user
+        await user.save();
+        res.send('Password reset successful');
+    });
 });
 
 app.get('/api/getUserInfo', async (req, res) => {

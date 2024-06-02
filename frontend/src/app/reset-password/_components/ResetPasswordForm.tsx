@@ -14,12 +14,12 @@ import { useRouter, useSearchParams } from 'next/navigation';
 export default function ResetPasswordForm() {
     const [visiblity, setVisibility] = useState(false);
     const [confirmVisiblity, setConfirmVisibility] = useState(false);
-    // const [email, setEmail] = useState<string>("");
-    // const [name, setName] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [confirmPassword, setConfirmPassword] = useState<string>("");
     const router = useRouter();
     const searchParams = useSearchParams();
+    const params = new URLSearchParams(searchParams);
+    const { resetPassword } = useUsers();
     
     
     const handleEnableVisiblity = () => {
@@ -40,16 +40,7 @@ export default function ResetPasswordForm() {
 
     const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        // if (email === "") {
-        //     alert("請輸入帳號！");
-        //     return;
-        // }
 
-        // if (name === "") {
-        //     alert("請輸入名字！");
-        //     return;
-        // }
-    
         if (password.length < 8) {
             alert("密碼長度至少須為8碼以上！");
             return;
@@ -60,21 +51,24 @@ export default function ResetPasswordForm() {
             return;
         }
 
-        
-        // try {
-        //     const newUser = await Register(password, email, name);
-        //     if (newUser) {
-        //         alert("Register success!");
-        //         const params = new URLSearchParams(searchParams);
-        //         params.set("username", name!);
-        //         router.push(`/?${params.toString()}`);
-        //     }
-        //     else {
-        //         alert("Register failed, please try again!");
-        //     }
-        // }catch(error){
-        //     console.log(error);
-        // }
+        const token = params.get("token");
+        if (!token) {
+            alert("Token not found!");
+            router.push("/");
+            return;
+        }
+        try {
+            const res = await resetPassword(token, password);
+            if (res) {
+                alert("Reset password success, and you can login with the new password!");
+                router.push(`/`);
+            }
+            else {
+                alert("Reset password failed, please try again!");
+            }
+        }catch(error){
+            console.log(error);
+        }
 
     }
 

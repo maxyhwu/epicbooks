@@ -1,6 +1,5 @@
 "use client"
 import useCarts from '@/hooks/useCart';
-import useUsers from '@/hooks/useUsers';
 import { booksType } from "@/lib/types";
 import { IconButton } from "@mui/material";
 import Image from "next/image";
@@ -10,11 +9,12 @@ import FavIcon from './FavoriteIcon';
 
 type BookDetailProps ={
     username: string,
+    isFav: boolean,
 }
 
 type combinedType = BookDetailProps & booksType;
 
-export default async function BookDetail(
+export default function BookDetail(
 {   id, 
     price, 
     title, 
@@ -27,13 +27,11 @@ export default async function BookDetail(
     image, 
     description, 
     username,
+    isFav,
 }:combinedType, 
 ){
     const [buyQuantity, setBuyQuantity] = useState(1);
     const router = useRouter();
-    const { isInFav } = useUsers();
-    const isFav = await isInFav(username, String(id));
-
     const {addFavorite, addToCart} = useCarts();
     const svgToDataUrl = (svgString: string): string => {
         // Decode Unicode-escaped characters

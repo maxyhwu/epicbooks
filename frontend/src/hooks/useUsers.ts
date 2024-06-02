@@ -1,7 +1,7 @@
 import { booksType, userType } from "@/lib/types";
 import bcrypt from "bcryptjs";
 import { useSearchParams } from "next/navigation";
-// import { useEffect } from "react";
+import { useEffect } from "react";
 import useBooks from "./useBook";
 
 export default function useUsers(){
@@ -14,6 +14,9 @@ export default function useUsers(){
     // }, []);
     
     const getUserInfo = async(username: string) =>{
+        if (!username) {
+            return null;
+        }
         try{
             const response  =  await fetch(`http://localhost:8000/api/getUserInfo/?username=${username}`, {
             method: 'GET',
@@ -37,6 +40,9 @@ export default function useUsers(){
 
     const isInFav = async(username: string, bookId: string) =>{
         try{
+            if (!username) {
+                return null;
+            }
             const userInfo = await getUserInfo(username);
             if (userInfo) {
                 return userInfo.favorite.includes(Number(bookId));
@@ -108,6 +114,7 @@ export default function useUsers(){
     const Login = async(email: string, password:string) => {
         try {
             const loginResponse = await fetch(`http://localhost:8000/api/login/?email=${email}`, {
+            cache: "no-store",
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -159,6 +166,33 @@ export default function useUsers(){
         }
     }
 
+    const resetPassword = async(token: string, newPassword:string) => {
+        try {
+            const hashedPassword = await bcrypt.hash(newPassword, 10);
+            const resetPasswordResponse = await fetch(`http://localhost:8000/api/resetPassword`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                token,
+                newPassword: hashedPassword,
+            }),
+        });
+
+
+        if (resetPasswordResponse.ok) {
+            return true;
+          } else {
+            console.error("Failed to reset password.");
+            return false;
+          }
+
+        }catch(error){
+            console.log(error);
+        }
+    }
+
     return{
         getUserInfo,
         isInFav,
@@ -166,5 +200,6 @@ export default function useUsers(){
         Register,
         Login,
         forgotPassword,
+        resetPassword,
     };
 }
