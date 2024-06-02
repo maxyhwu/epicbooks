@@ -1,13 +1,13 @@
 "use client";
 
-import { publicEnv } from "@/lib/env/public";
-import { useSession } from "next-auth/react";
+// import { publicEnv } from "@/lib/env/public";
+// import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 
 export default function LoginButton() {
   const router = useRouter();
-  const { data: session } = useSession();
+  // const { data: session } = useSession();
   const handleSignIn = async() => {
     router.push("/login");
   }

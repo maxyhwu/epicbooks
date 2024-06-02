@@ -1,6 +1,5 @@
 "use client"
 import useUsers from '@/hooks/useUsers';
-import { userType } from '@/lib/types';
 import EmailIcon from '@mui/icons-material/Email';
 import LockIcon from '@mui/icons-material/Lock';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -50,7 +49,7 @@ export default function LoginForm() {
                 alert("Login success!");
                 const params = new URLSearchParams(searchParams);
                 params.set("username", result.username as string);
-                router.push(`/?${params.toString()}`);
+                router.push(`/?${params.toString()}`);       
             }
             else {
                 alert("Login failed, the email or the password may be wrong. Please try again!");
@@ -59,6 +58,7 @@ export default function LoginForm() {
             }
         }catch(error){
             console.log(error);
+            return;
         }
 
     }
@@ -83,7 +83,7 @@ export default function LoginForm() {
                         <VisibilityIcon fontSize='large' className='my-auto mx-2'/>
                     </IconButton>}
                 </div>
-                <button className='w-full text-right mt-2 underline' onClick={handleForgotPassword}>Forgot Password</button>
+                <button className='w-full text-right mt-2 underline' onClick={handleForgotPassword} type="button">Forgot Password</button>
                 
                 <button type="submit" className="mt-10 px-4 py-2 text-2xl rounded-md border border-black hover:bg-slate-200 hover:shadow-2xl bg-buttons">Login</button>
             </form>

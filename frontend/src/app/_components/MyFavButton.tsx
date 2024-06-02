@@ -27,11 +27,9 @@ export default function MyFavButton() {
   }
   
   return (
-    <div className="flex justify-center items-center bg-yellow-200 rounded-lg p-1.5">
-      <p className="text-base text-center ml-2">My Fav.</p>
-      <IconButton onClick={handleOnClick} className="hover:text-lime-700">
-        <FavoriteBorderIcon />
-      </IconButton>
-    </div>
+    <button className="flex justify-center items-center bg-yellow-200 rounded-lg px-4 py-2.5 hover:bg-gray-200" onClick={handleOnClick}>
+      <p className="text-base text-center ml-2 ">My Fav.</p>
+      <FavoriteBorderIcon className="ml-2"/>
+    </button>
   );
 }

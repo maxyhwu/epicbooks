@@ -3,6 +3,7 @@ import CartButton from "@/app/_components/CartButton";
 import MyFavButton from "@/app/_components/MyFavButton";
 import useBooks from "@/hooks/useBook";
 import { booksType } from "@/lib/types";
+import SaleButton from "../_components/SaleButton";
 
 export default async function Home() {
   const { getNewArrival } = useBooks();
@@ -19,6 +20,7 @@ export default async function Home() {
           <div className="flex items-center justify-center gap-5 text-2xl">
             <MyFavButton/>
             <CartButton />
+            <SaleButton/>
           </div>
         </div>
         <p className="text-center mt-6 text-2xl font-bold">Today</p>

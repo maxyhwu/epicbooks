@@ -1,18 +1,20 @@
 "use client"
 import useBooks from '@/hooks/useBook';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { booksType } from '@/lib/types';
 import { ChangeEvent, useState } from 'react';
+import RecomBooklist from './RecomBooklist';
 
 export default function RecomSelect() {
   const categories = ["adventure", "romance", "kids", "animals"];
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const params = new URLSearchParams(searchParams);
+  const [show, setShow] = useState(false);
+  const { getRecommendations } = useBooks();
+  const [bookList, setBookList] = useState<booksType[]>([]); 
 
 
   const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
     const category = event.target.id.replace('vertical-list-', '');
+    setShow(false);
     if (event.target.checked) {
       setSelectedCategories([...selectedCategories, category]);
     } else {
@@ -40,11 +42,16 @@ export default function RecomSelect() {
       }
 
     });
-    params.set("queryString", queryString!);
-    router.push("/recommendation-content?"+params.toString());
+
+    const recommendationBooks = await getRecommendations(queryString);
+    if (recommendationBooks) {
+      setBookList(recommendationBooks);
+      setShow(true);
+    }
   };
 
   return (
+    <>
     <div className="mt-16 flex flex-col w-full justify-center items-center py-5">
       <p className="text-3xl m-3">Choose the category you like!</p>
       <div className="relative flex flex-col text-gray-700 bg-white shadow-md rounded-xl bg-clip-border">
@@ -86,6 +93,8 @@ export default function RecomSelect() {
         </nav>
         <button onClick={handleSave} className="text-center hover:bg-gray-100 border bg-white rounded-md py-1 px-6 h-25 text-base">Save</button>
       </div>
-</div>
+    </div>
+    {show && <RecomBooklist bookList={bookList}/>}
+    </>
   );
 }

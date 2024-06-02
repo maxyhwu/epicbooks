@@ -3,6 +3,7 @@ import useBooks from "@/hooks/useBook";
 import useUsers from "@/hooks/useUsers";
 import MyFavButton from "../_components/MyFavButton";
 import BookDetail from "./_components/BookDetail";
+import SaleButton from "../_components/SaleButton";
 
 type Pageprops = {
   searchParams: {
@@ -26,9 +27,9 @@ export default async function BookDetailPage({searchParams:{bookId, username}}: 
       <div className="flex justify-between px-10 item-center border-b border-b-gray-700 p-5">
         <p className="text-2xl pt-2 font-semibold">Book Detail</p>
         <div className="flex items-center justify-center gap-5 text-2xl">
-          {/* <GetSerachName /> */}
           <MyFavButton/>
           <CartButton />
+          <SaleButton/>
         </div>
       </div>
       <div className="flex items-center justify-center pt-10 px-10 ">

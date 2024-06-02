@@ -1,18 +1,27 @@
 {
   "overrides": [
     {
-      "files": ["*.mjs", "*.ts", "*.tsx"],
+      "files": [
+        "*.mjs",
+        "*.ts",
+        "*.tsx"
+      ],
       "parserOptions": {
         "project": "tsconfig.json"
       }
     }
   ],
-  "ignorePatterns": ["**/components/ui"],
+  "ignorePatterns": [
+    "**/components/ui"
+  ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "project": "./tsconfig.json"
   },
-  "plugins": ["react", "@typescript-eslint"],
+  "plugins": [
+    "react",
+    "@typescript-eslint"
+  ],
   "extends": [
     "next/core-web-vitals",
     "eslint:recommended",

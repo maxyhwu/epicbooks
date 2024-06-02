@@ -1,6 +1,7 @@
 import CartButton from "@/app/_components/CartButton";
 import MyFavButton from "@/app/_components/MyFavButton";
 import RecomSelect from "./_components/RecomSelect";
+import SaleButton from "../_components/SaleButton";
 
 export default async function Home() {
 
@@ -12,6 +13,7 @@ export default async function Home() {
           <div className="flex items-center justify-center gap-5 text-2xl">
             <MyFavButton/>
             <CartButton />
+            <SaleButton/>
           </div>
         </div>
         <RecomSelect/>

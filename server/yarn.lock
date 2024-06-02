@@ -502,6 +502,11 @@ ipaddr.js@1.9.1:
   resolved "https://registry.npmjs.org/ipaddr.js/-/ipaddr.js-1.9.1.tgz"
   integrity sha512-0KI/607xoxSToH7GjN1FfSbLoU0+btTicjsQSWQlh/hZykN8KpmMf7uYwPW3R+akZ6R/w18ZlXSHBYXiYUPO3g==
 
+jabber@^1.5.3:
+  version "1.5.3"
+  resolved "https://registry.yarnpkg.com/jabber/-/jabber-1.5.3.tgz#ca45c4d7e7607932d60f491f2883c5de783a3bf3"
+  integrity sha512-4g5zZ9kF10oWNZzeKJqwh9yFHsee7CMWe3pXRJTdibvaMPNFWAJlLf1dno4Osxw/t9+fk0bEbEOJcscHziGX+w==
+
 jdenticon@2.2.0:
   version "2.2.0"
   resolved "https://registry.npmjs.org/jdenticon/-/jdenticon-2.2.0.tgz"

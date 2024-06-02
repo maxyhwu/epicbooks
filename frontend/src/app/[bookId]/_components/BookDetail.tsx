@@ -4,7 +4,7 @@ import { booksType } from "@/lib/types";
 import { IconButton } from "@mui/material";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import FavIcon from './FavoriteIcon';
 
 type BookDetailProps ={
@@ -25,14 +25,14 @@ export default function BookDetail(
     genre, 
     language,
     image, 
-    description, 
+    description,
+    isFav, 
     username,
-    isFav,
 }:combinedType, 
 ){
     const [buyQuantity, setBuyQuantity] = useState(1);
     const router = useRouter();
-    const {addFavorite, addToCart} = useCarts();
+    const {addFavorite, addToCart, addToSalesCart} = useCarts();
     const svgToDataUrl = (svgString: string): string => {
         // Decode Unicode-escaped characters
         const decodedSvgString = svgString?.replace(/\\u([\dA-F]{4})/gi, (_, group) =>
@@ -52,16 +52,32 @@ export default function BookDetail(
             setBuyQuantity(parseInt(inputValue));
         }
     }
-    const handleAddToCart =async () =>{
+    const handleAddToCart =async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>{
+        e.preventDefault();
         if (!username){
             alert("Please login first")
             router.push("/login");
             router.refresh();
             return;
         }
-        const resp = await addToCart(username, id);
+        const resp = await addToCart(username, id, buyQuantity);
         alert(resp);
+        router.refresh()
     }
+
+    const handleAddToSale =async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>{
+        e.preventDefault();
+        if (!username){
+            alert("Please login first")
+            router.push("/login");
+            router.refresh();
+            return;
+        }
+        const resp = await addToSalesCart(username, id, buyQuantity);
+        alert(resp);
+        router.refresh()
+    }
+
     const handleFav = async (e: React.MouseEvent<HTMLDivElement, MouseEvent>) =>{
         e.preventDefault();
         if (!username){
@@ -71,6 +87,7 @@ export default function BookDetail(
            return;
         }
         const resp = await addFavorite(username, id);
+        alert(resp)
         router.refresh();
     }
 
@@ -109,7 +126,8 @@ export default function BookDetail(
                     </IconButton>
                 </div>
                 <input type='number' value={buyQuantity} className='w-12 ml-1 rounded-md text-center border border-black' onChange={handleOnChange}></input>
-                <button onClick={handleAddToCart} className="text-center border border-black bg-white rounded-md py-1 px-6 h-25 text-lg hover:bg-gray-200">Add To My Cart</button>
+                <button onClick={(e) => handleAddToCart(e)} className="text-center border border-black bg-white rounded-md py-1 px-6 h-25 text-lg hover:bg-gray-200">Add To My Cart</button>
+                <button onClick={(e) => handleAddToSale(e)} className="text-center border border-black bg-white rounded-md py-1 px-6 h-25 text-lg hover:bg-gray-200">Add To My Sale</button>
                 <p className="mt-5"> {sales?.toString()} people had bought it</p>
             </div>
         </div>

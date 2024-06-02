@@ -1,18 +1,18 @@
 "use client"
-import { publicEnv } from "@/lib/env/public";
 import Image from "next/image";
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+// import { getProductDetails } from "../../warehouse/_components/action";
 
 
-type RecomPreviewProps = {
+type BookPreviewProps = {
   bookId: string;
   bookName: String;
   image: String;
   price: Number;
   author: String;
   description: String;
+  genres: [String];
 };
-
 
 export default function RecomPreview({
   bookId,
@@ -21,12 +21,16 @@ export default function RecomPreview({
   price,
   author,
   description,
+  genres,
   // mode,
-}: RecomPreviewProps) {
-  
-  const searchParams = useSearchParams();
-  
+}: BookPreviewProps) {
+  // const productDetails = await getProductDetails(bookId);
   const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const handleCancelSearch = () => {
+    
+  }
   const svgToDataUrl = (svgString: string): string => {
     // Decode Unicode-escaped characters
     const decodedSvgString = svgString.replace(/\\u([\dA-F]{4})/gi, (_, group) =>
@@ -37,7 +41,6 @@ export default function RecomPreview({
     // Create data URL
     return `data:image/svg+xml;base64,${base64Svg}`;
   };
-
   const handleDetail = () =>{
     const params = new URLSearchParams(searchParams);
     params.set("bookId", bookId!);
@@ -45,8 +48,8 @@ export default function RecomPreview({
   }
 
   return (
-      <div className="max-h-full flex gap-5 justify-between w-full items-center rounded-md border border-black p-3 shadow-sm bg-custom">
-        {/* <div className="flex gap-5"> */}
+    <div className="max-h-full flex flex-col gap-5 justify-between w-full items-center rounded-md border border-black p-3 shadow-sm bg-custom">
+      <div className="max-h-full flex gap-5 justify-between w-full items-center">
           <div className="flex flex-col gap-2 w-1/2 min-h-full justify-between">
             <Image
               src = {svgToDataUrl(image?.toString())}  
@@ -58,10 +61,10 @@ export default function RecomPreview({
             <div className="flex flex-col gap-2">
               <div className="mt-2">
                 <div className="bg-white border border-black rounded-md p-0.5">
-                  {bookName.length < 11 ? (
+                  {bookName?.length < 11 ? (
                     <p className="text-sm m-1">Title: {bookName}</p>
                   ) : ( 
-                    <p className="text-sm">Title: {bookName?.substring(0, 10)}...</p>
+                    <p className="text-sm m-1">Title: {bookName?.substring(0, 10)}...</p>
                   )}
                 </div>
                 {/* <p className="text-sm font-semibold">{"NTD " + minPrice}</p> */}
@@ -75,12 +78,16 @@ export default function RecomPreview({
             </div>
           </div>
           <div className="w-1/2 relative border border-black bg-white h-full rounded-md p-2">
-            <p className="text-sm m-1"> Description: {description}</p>
+            <p className="text-sm m-1"> Description: {description?.substring(0,280)}</p>
             <button className="text-xs absolute text-center border border-black bottom-0 right-0 m-2 bg-custom hover:bg-yellow-500 text-black py-1 px-3 rounded-2xl"
             onClick={handleDetail}>
               More...
               </button>
           </div>
       </div>
+      <div className="flex gap-2">
+        {genres.map((genre) => (<p>#{genre}</p>))}
+      </div>
+    </div>
   );
 }

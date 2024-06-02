@@ -3,6 +3,7 @@ import MyFavButton from "@/app/_components/MyFavButton";
 import useBooks from "@/hooks/useBook";
 import { booksType } from "@/lib/types";
 import BestSellingPreview from "./_components/BestSellingPreview";
+import SaleButton from "../_components/SaleButton";
 type Pageprops = {
   searchParams: {
     username: string,
@@ -32,6 +33,7 @@ export default async function Home({
             {/* <GetSerachName /> */}
             <MyFavButton/>
             <CartButton />
+            <SaleButton/>
           </div>
         </div>
         <p className="text-center mt-6 text-2xl font-bold">Ranking</p>

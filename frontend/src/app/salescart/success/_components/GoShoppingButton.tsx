@@ -12,6 +12,6 @@ export default function GoShoppingButton({username}: GoShoppingButtonProps){
         router.push(`/?${params.toString()}`);
     }
     return(
-        <button onClick={handleGoShopping} className="bg-buttons font-semibold hover:bg-gray-100 border border-black rounded-md text-sm text-black uppercase p-3">Go shopping</button>
+        <button onClick={handleGoShopping} className="bg-buttons font-semibold hover:bg-gray-100 border border-black rounded-md text-sm text-black uppercase p-3">Go selling</button>
     );
 }

@@ -1,24 +1,21 @@
-import { booksType, userType } from "@/lib/types";
+import { userType } from "@/lib/types";
 import bcrypt from "bcryptjs";
-import { useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+// import { useEffect } from "react";
 import useBooks from "./useBook";
-
+const baseURL = "http://localhost:8000/api"
+// const baseURL = "https://epicbooks-950h.onrender.com/api"
 export default function useUsers(){
     // const searchParams = useSearchParams();
     // const params = new URLSearchParams(searchParams);
     // const username = params.get("username");
-    const { getBookInfo } = useBooks();
-    // useEffect(() => {
-    //     getUserInfo(username ?? "");
-    // }, []);
+    // const { getBookInfo } = useBooks();
     
     const getUserInfo = async(username: string) =>{
         if (!username) {
             return null;
         }
         try{
-            const response  =  await fetch(`http://localhost:8000/api/getUserInfo/?username=${username}`, {
+            const response  =  await fetch(`${baseURL}/getUserInfo/?username=${username}`, {
             method: 'GET',
             cache: "no-store",
             headers: {
@@ -39,6 +36,8 @@ export default function useUsers(){
     }
 
     const isInFav = async(username: string, bookId: string) =>{
+        if(!username)
+            return null
         try{
             if (!username) {
                 return null;
@@ -57,32 +56,32 @@ export default function useUsers(){
         
     }
 
-    const getUserFav = async(username: string) =>{
-        try{
-            const userInfo = await getUserInfo(username);
-            if (userInfo) {
-                userInfo.favorite.forEach(async(fav) => {
-                    const bookInfo = await getBookInfo(Number(fav));
+    // const getUserFav = async(username: string) =>{
+    //     try{
+    //         const userInfo = await getUserInfo(username);
+    //         if (userInfo) {
+    //             userInfo.favorite.forEach(async(fav) => {
+    //                 const bookInfo = await getBookInfo(Number(fav));
                     
-                })  
+    //             })  
                 
                 
-                return null;
-            }
-            else {
-                return null;
-            }
+    //             return null;
+    //         }
+    //         else {
+    //             return null;
+    //         }
             
-        }catch(error){
-            console.log(error);
-        }
+    //     }catch(error){
+    //         console.log(error);
+    //     }
         
-    }
+    // }
 
     const Register = async (password: string, email: string, username: string) => {
         const hashedPassword = await bcrypt.hash(password, 10);
         try {
-            const registerResponse = await fetch("http://localhost:8000/api/register", {
+            const registerResponse = await fetch(`${baseURL}/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -96,11 +95,10 @@ export default function useUsers(){
             }),
         });
 
-
         if (registerResponse.ok) {
-            const newUser:userType = await registerResponse.json();
-            return newUser;
-
+            const response = await registerResponse.text();
+            console.log(response);
+            return response;
           } else {
             console.error("Failed to register user.");
             return null;
@@ -113,8 +111,7 @@ export default function useUsers(){
 
     const Login = async(email: string, password:string) => {
         try {
-            const loginResponse = await fetch(`http://localhost:8000/api/login/?email=${email}`, {
-            cache: "no-store",
+            const loginResponse = await fetch(`${baseURL}/login/?email=${email}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -142,7 +139,7 @@ export default function useUsers(){
 
     const forgotPassword = async(username: string, email:string) => {
         try {
-            const forgotPasswordResponse = await fetch(`http://localhost:8000/api/forgotPassword`, {
+            const forgotPasswordResponse = await fetch(`${baseURL}/forgotPassword`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -196,7 +193,7 @@ export default function useUsers(){
     return{
         getUserInfo,
         isInFav,
-        getUserFav,
+        // getUserFav,
         Register,
         Login,
         forgotPassword,

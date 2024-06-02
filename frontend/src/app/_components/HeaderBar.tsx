@@ -55,9 +55,9 @@ export default function HeaderBar() {
           onClick={handleHome}
           className="flex gap-0.5 items-center justify-center align-center">
             <Image src="/story_book.ico" alt="IMazon icon" width={45} height={25} />
-            <p className="ml-2 text-4xl font-semibold text-black">ePicBook</p>
+            <p className="ml-2 text-4xl font-semibold text-black">ePicBooks</p>
           </button>
-        <GetSerachName/>
+        {/* <GetSerachName/> */}
       </div>
      
       <div className="flex gap-8">

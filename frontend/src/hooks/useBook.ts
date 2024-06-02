@@ -1,8 +1,10 @@
 import { booksType } from "@/lib/types";
 
+// const baseURL = "https://epicbooks-950h.onrender.com/api"
+const baseURL = "http://localhost:8000/api"
 export default function useBooks(){
     const generateBooks = async () => {
-        const response  =  await fetch("http://localhost:8000/api/genRandomBooks" , {
+        const response  =  await fetch(`${baseURL}/genRandomBooks?numBooks=${50}` , {
             method: 'PUT',
             headers: {
             'Content-Type' : 'application/json',
@@ -14,24 +16,43 @@ export default function useBooks(){
             console.error('Failed to generate random books:', response.status);
         }
     }
-    const getAllBooks = async () =>{
-        const response = await fetch("http://localhost:8000/api/getRandomBooks",{
-          method: 'GET',
-          headers: {
-            'Content-Type' : 'application/json',
-          }
-        })
-        if (response.ok) {
-            const books: booksType[] = await response.json();
-            // Now books contains the parsed JSON data
-            return books
-        } else {
-            console.error('Failed to fetch random books:', response.status);
+    const getAllBooks = async (input?: string) =>{
+        if (input != "") {
+            const response = await fetch(`${baseURL}/search/?input=${input}`,{
+                method: 'GET',
+                cache: "no-store",
+                headers: {
+                  'Content-Type' : 'application/json',
+                }
+              })
+              if (response.ok) {
+                  const books: booksType[] = await response.json();
+                  return books;
+              } else {
+                  console.error('Failed to search books:', response.status);
+              }
+
+        }
+        else {
+            const response = await fetch(`${baseURL}/getRandomBooks`,{
+                method: 'GET',
+                cache: "no-store",
+                headers: {
+                  'Content-Type' : 'application/json',
+                }
+              })
+              if (response.ok) {
+                  const books: booksType[] = await response.json();
+                  // Now books contains the parsed JSON data
+                  return books;
+              } else {
+                  console.error('Failed to fetch random books:', response.status);
+              }
         }
       }
 
     const getBestSellings = async () =>{
-        const response = await fetch("http://localhost:8000/api/getBestSellings",{
+        const response = await fetch(`${baseURL}/getBestSellings`,{
             method: 'GET',
             headers: {
             'Content-Type' : 'application/json',
@@ -46,7 +67,7 @@ export default function useBooks(){
         }
     }
     const getNewArrival = async () =>{
-        const response = await fetch("http://localhost:8000/api/getNewArrival",{
+        const response = await fetch(`${baseURL}/getNewArrival`,{
             method: 'GET',
             headers: {
             'Content-Type' : 'application/json',
@@ -62,7 +83,7 @@ export default function useBooks(){
     }
 
     const getRecommendations = async(genres: string) =>{
-        const response = await fetch(`http://localhost:8000/api/getRecommendations/?genres=${genres}`, {
+        const response = await fetch(`${baseURL}/getRecommendations/?genres=${genres}`, {
             method: 'GET',
             headers:{
                 'Content-Type' : 'application/json', 
@@ -70,14 +91,14 @@ export default function useBooks(){
         })
         if(response.ok){
             const recommendations: booksType[] = await response.json();
-            return recommendations
+            return recommendations;
         }else{
             console.error('Failed to fetch recommendations:', response.status);
         }
     }
 
     const getBookInfo = async (bookId: number) =>{
-        const response = await fetch(`http://localhost:8000/api/getBookInfo/?bookId=${bookId}`,{
+        const response = await fetch(`${baseURL}/getBookInfo/?bookId=${bookId}`,{
             method: 'GET',
             cache: "no-store",
             headers: {
