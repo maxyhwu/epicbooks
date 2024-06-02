@@ -1,19 +1,22 @@
+import bodyParser from 'body-parser';
+import cors from "cors";
+import dotenv from 'dotenv';
 import express from 'express';
 import { Dictionary } from 'express-serve-static-core';
-import mongoose, { ConnectOptions } from 'mongoose';
-import dotenv from 'dotenv';
-import jdenticon from 'jdenticon';
-import { uniqueNamesGenerator, Config, adjectives, colors, animals, languages, names } from 'unique-names-generator';
-import nodemailer from 'nodemailer';
-import bodyParser from 'body-parser';
 import Jabber from 'jabber';
+import jdenticon from 'jdenticon';
+import mongoose, { ConnectOptions } from 'mongoose';
+import nodemailer from 'nodemailer';
+import { Config, adjectives, animals, colors, languages, names, uniqueNamesGenerator } from 'unique-names-generator';
+import { booksType, cartItem, userType } from './types';
 
 const app = express() as express.Application;
-const port = 3000 as number;
+const port = 8000 as number;
 dotenv.config();
 const mongo_uri = process.env.MONGO_URI as string;
 
 app.use(bodyParser.json());
+app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Connect to MongoDB
@@ -27,6 +30,12 @@ db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', () => {
     console.log('Connected to MongoDB')
 });
+
+
+// const cartItemSchema = new mongoose.Schema({
+//     itemId: Number,
+//     quantity: Number,
+// });
 
 const booksSchema = new mongoose.Schema({
     id: Number,
@@ -49,12 +58,13 @@ const usersSchema = new mongoose.Schema({
     phone: String,
     address: String,
     favorite: [Number],
-    cart: [Number],
+    cart: [] as cartItem[],
     salesCart: [Number]
 });
 
 const booksModel = mongoose.model('books', booksSchema);
 const usersModel = mongoose.model('users', usersSchema);
+// const itemModel = mongoose.model("item", cartItemSchema)
 
 app.get('/api', (req:any, res:any) => {
     res.send('Hello World!');
@@ -68,8 +78,13 @@ app.get('/api/search', async(req:any, res:any) => {
 });
 
 app.get('/api/getBestSellings', async(req:any, res:any) => {
-    const bestSellings = await booksModel.find({}).sort({sales: -1});
-    res.send(bestSellings);
+    try {
+        const bestSellings: booksType[] = await booksModel.find({}).sort({sales: -1});
+        res.send(bestSellings);
+    } catch (error) {
+        res.status(500).send(error);
+    }
+    
 });
 
 app.get('/api/getRecommendations', async(req:any, res:any) => {
@@ -101,7 +116,7 @@ app.get('/api/getNewArrival', async(req:any, res:any) => {
 
 app.get('/api/getBookInfo', async(req:any, res:any) => {
     const bookId = req.query.bookId as number;
-    const bookInfo = await booksModel.findById(bookId);
+    const bookInfo: booksType = await booksModel.findOne({id: bookId});
     res.send(bookInfo);
 });
 
@@ -109,20 +124,22 @@ app.get('/api/getBookInfo', async(req:any, res:any) => {
 // User APIs
 // Max
 // Using user schema
-app.post('/api/login', async(req:any, res:any) => {
-    const username = req.body.username ? req.body.username : 'nullUser' as string;
-    const password = req.body.password ? req.body.password : 'nullUser' as string;
-    await usersModel.findOne({username: username, password: password}).then((result:any) => {
-        if(result) {
-            res.send('Login success');
+// User APIs
+app.get('/api/login', async (req, res) => {
+    const email = String(req.query.email);
+    try {
+        const result = await usersModel.findOne({ email });
+        if (result) {
+            res.send(result);
         } else {
-            res.send('Login failed');
+            res.status(500).send('Login failed');
         }
-    }
-    ).catch((err:any) => {
+    } catch (err) {
         console.error(err);
-    });
+        res.status(500).send('Internal Server Error');
+    }
 });
+
 app.post('/api/register', async(req:any, res:any) => {
     const newUser = {
         username: req.body.username,
@@ -131,7 +148,8 @@ app.post('/api/register', async(req:any, res:any) => {
         phone: req.body.phone,
         address: req.body.address,
         favorite: [],
-        cart: []
+        cart: [],
+        salesCart: [],
     } as Dictionary<any>;
     await usersModel.create(newUser).then(() => {
         res.send('Register success');
@@ -230,13 +248,19 @@ app.post('/api/resetPassword', async(req: any, res: any) => {
     res.send('Password reset successful');
 });
 
-app.get('/api/getUserInfo', async(req:any, res:any) => {
-    const username = req.query.username ? req.query.username : 'nullUser' as string;
-    await usersModel.findOne({username: username}).then((result:any) => {
-        res.send(result);
-    }).catch((err:any) => {
+app.get('/api/getUserInfo', async (req, res) => {
+    const username = String(req.query.username);
+    try {
+        const result: userType = await usersModel.findOne({ username });
+        if (result) {
+            res.send(result);
+        }
+        else {
+            res.status(404).send("User not found");
+        }
+    } catch (err) {
         console.error(err);
-    });
+    };
 });
 
 // MyFavorite APIs
@@ -258,43 +282,7 @@ app.post('/api/addFavorite', async(req:any, res:any) => {
             }
         }
         else {
-            res.send('User not found');
-        }
-    }).catch((err:any) => {
-        console.error(err);
-    });
-});
-app.post('/api/removeFavorite', async(req:any, res:any) => {
-    const username = req.query.username ? req.query.username : "nullUser" as string;
-    const bookId = req.query.bookId ? req.query.bookId : 12345678 as number;
-    await usersModel.findOne({username: username}).then(async(user:any) => {
-        if(user) {
-            if(user.favorite.includes(bookId)) {
-                user.favorite = user.favorite.filter((id: number) => id !== bookId);
-                await usersModel.updateOne({username: username}, user).then(() => {
-                    res.send('Removed from favorite');
-                }).catch((err:any) => {
-                    console.error(err);
-                });
-            }
-            else {
-                res.send('Not in favorite');
-            }
-        }
-        else {
-            res.send('User not found');
-        }
-    }).catch((err:any) => {
-        console.error(err);
-    });
-});
-app.get('/api/getFavorite', (req:any, res:any) => {
-    const username = req.query.username ? req.query.username : "nullUser" as string;
-    usersModel.findOne({username: username}).then((user:any) => {
-        if(user) {
-            res.send(user.favorite);
-        }
-        else {
+            console.log("I didn't found: \n"+ user)
             res.send('User not found');
         }
     }).catch((err:any) => {
@@ -302,56 +290,112 @@ app.get('/api/getFavorite', (req:any, res:any) => {
     });
 });
 
+app.post('/api/removeFavorite', async (req, res) => {
+    const username = req.query.username as string || 'nullUser';
+    const bookId = Number(req.query.bookId) || 12345678;
+    try {
+        const user = await usersModel.findOne({ username });
+        if (user) {
+            if (user.favorite.includes(bookId)) {
+                user.favorite = user.favorite.filter((id: number) => id !== bookId);
+                await user.save();
+                res.send('Removed from favorite');
+            } else {
+                res.send('Not in favorite');
+            }
+        } else {
+            res.status(404).send('User not found');
+        }
+    } catch (error) {
+        res.status(500).send(error);
+    }
+});
+
+app.get('/api/getFavorite', async (req, res) => {
+    const username = req.query.username as string || 'nullUser';
+    try {
+        const user:userType = await usersModel.findOne({ username });
+        if (user) {
+            const favList = user.favorite;
+            res.json(favList);
+        } else {
+            res.status(404).send('User not found');
+        }
+    }catch(err){
+        console.error(err);
+    };
+});
+
 // Cart APIs
 app.post('/api/addToCart', async(req:any, res:any) => {
     const username = req.query.username ? req.query.username : "nullUser" as string;
-    const bookId = req.query.bookId ? req.query.bookId : 12345678 as number;
-    await usersModel.findOne({username: username}).then(async(user:any) => {
-        if(user) {
-            if(user.cart.includes(bookId)) {
-                res.send('Already in cart');
-            }
-            else {
-                user.cart.push(bookId);
-                await usersModel.updateOne({username: username}, user).then(() => {
-                    res.send('Added to cart');
-                }).catch((err:any) => {
-                    console.error(err);
-                });
-            }
+    const bookId = Number(req.query.bookId) || 12345678;
+    const quantity = Number(req.query.quantity) || 1;
+    const user = await usersModel.findOne({ username });
+    if (user) {
+        const idList:Number[] = [];
+        user.cart.forEach((item:cartItem) => {
+            idList.push(item.itemId);
+        });
+        const index = idList.findIndex((id) => id === bookId);
+        if (index != -1) {
+            const newQuantity =  Number(user.cart[index].quantity) + quantity;   
+            await usersModel.updateOne({ username }, {$set: {[`cart.${index}.quantity`]: newQuantity}});
+            res.send('Added another to cart');
+        } else {
+            user.cart.push({ itemId: bookId, quantity });
+            await user.save();
+            res.send('Added to cart');
         }
-        else {
-            res.send('User not found');
-        }
-    }).catch((err:any) => {
-        console.error(err);
-    });
+
+        // await user.save();
+    } else {
+        res.status(404).send('User not found');
+    }
 });
+
 app.post('/api/removeFromCart', async(req:any, res:any) => {
-    const username = req.query.username ? req.query.username : "nullUser" as string;
-    const bookId = req.query.bookId ? req.query.bookId : 12345678 as number;
-    await usersModel.findOne({username: username}).then(async(user:any) => {
-        if(user) {
-            if(user.cart.includes(bookId)) {
-                user.cart = user.cart.filter((id: number) => id !== bookId);
-                await usersModel.updateOne({username: username}, user).then(() => {
-                    res.send('Removed from cart');
-                }).catch((err:any) => {
-                    console.error(err);
-                });
-            }
-            else {
+    const username = req.query.username as string || 'nullUser';
+    const bookId = Number(req.query.bookId) || 12345678;
+    try {
+        const user = await usersModel.findOne({ username });
+        if (user) {
+            const cartItem = user.cart.find((item: cartItem) => item.itemId === bookId);
+            if (cartItem) {
+                user.cart = user.cart.filter((item: cartItem) => item.itemId !== bookId);
+                await user.save();
+                res.send('Removed from cart');
+            } else {
                 res.send('Not in cart');
             }
+            
+        } else {
+            res.status(404).send('User not found');
         }
-        else {
-            res.send('User not found');
-        }
+    } catch (error) {
+        res.status(500).send(error);
     }
-    ).catch((err:any) => {
-        console.error(err);
-    });
 });
+
+app.post('/api/clearCart', async(req:any, res:any) => {
+    const username = req.query.username as string || 'nullUser';
+    try {
+        const user = await usersModel.findOne({ username });
+        if (user) {
+            user.cart = [];
+            await usersModel.updateOne({username: username}, user).then(() => {
+                res.send('Clear the cart');
+            }).catch((err:any) => {
+                console.error(err);
+            });
+        } else {
+            res.status(404).send('User not found');
+        }
+    } catch (error) {
+        res.status(500).send(error);
+    }
+});
+
 app.get('/api/getCart', async(req:any, res:any) => {
     const username = req.query.username ? req.query.username : "nullUser" as string;
     await usersModel.findOne({username: username}).then((user:any) => {
