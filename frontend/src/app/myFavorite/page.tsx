@@ -1,3 +1,4 @@
+import useBooks from "@/hooks/useBook";
 import useUsers from "@/hooks/useUsers";
 import FavoriteItem from "./_components/FavoriteItem";
 type Pageprops = {
@@ -5,11 +6,37 @@ type Pageprops = {
       username: string,
     }
   };
-  
+
+type FavoriteProps ={
+    bookId: number;
+    username: string;
+    image: string;
+    title: string;
+    author: string;
+    price: number;
+}
 export default async function MyFavoritePage({searchParams:{username}}: Pageprops){
     const { getUserInfo } = useUsers(); 
+    const {getBookInfo} = useBooks();
     const userInfo = await getUserInfo(username);
     const favList = userInfo?.favorite;
+    const bookList: FavoriteProps[] = [];
+    if(favList){
+        const favPromises = favList?.map(async (fav) =>{
+            const bookInfo = await getBookInfo(Number(fav));
+            const bookTemp = {
+                bookId: fav,
+                username: username,
+                image: bookInfo?.image,
+                title: bookInfo?.title,
+                author: bookInfo?.author,
+                price: bookInfo?.price,
+            } as FavoriteProps
+            return bookTemp
+        })
+        const favResults = await Promise.all(favPromises);
+        bookList.push(...favResults);
+    }
     
     return(
         <div className="flex shadow-md my-3 justify-center">
@@ -23,10 +50,14 @@ export default async function MyFavoritePage({searchParams:{username}}: Pageprop
                 </div>
                 <div>
                     {
-                        favList?.map((favItem, i) =>(
+                        bookList?.map((favItem, i) =>(
                             <FavoriteItem
-                                bookId = {favItem}
+                                bookId = {Number(favItem.bookId)}
                                 username={username}
+                                price={Number(favItem.price)}
+                                title={favItem.title}
+                                author={favItem.author}
+                                image={favItem.image}
                                 key={i}
                             />
                         ))

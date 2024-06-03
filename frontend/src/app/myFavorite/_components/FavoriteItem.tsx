@@ -1,14 +1,15 @@
-import useBooks from "@/hooks/useBook";
 import Image from "next/image";
 import RemoveButton from "./removeButton";
 type FavoriteProps ={
-    bookId: Number;
+    bookId: number;
     username: string;
+    image: string;
+    title: string;
+    author: string;
+    price: number;
 }
 
-export default async function FavoriteItem({ bookId, username }:FavoriteProps){
-    const { getBookInfo } = useBooks();
-    const bookInfo = await getBookInfo(Number(bookId));
+export default function FavoriteItem({ bookId, username, image, title, author, price }:FavoriteProps){
     const svgToDataUrl = (svgString: string): string => {
         // Decode Unicode-escaped characters
         const decodedSvgString = svgString.replace(/\\u([\dA-F]{4})/gi, (_, group) =>
@@ -26,7 +27,7 @@ export default async function FavoriteItem({ bookId, username }:FavoriteProps){
                 <div className="flex w-2/5"> {/* product */}
                     <div className="w-48">
                         <Image
-                            src = {svgToDataUrl(bookInfo?.image?.toString() ?? "")}
+                            src = {svgToDataUrl(image?.toString() ?? "")}
                             alt="book_pic"
                             width={200}
                             height={50}
@@ -35,12 +36,12 @@ export default async function FavoriteItem({ bookId, username }:FavoriteProps){
                     </div>
                     <div className="flex flex-col justify-between ml-4 flex-grow">
                         <div className="flex flex-col gap-3">
-                            <span className="font-bold text-md">Name: {bookInfo?.title}</span>
-                            <span className="text-red-500 text-sm font-semibold">Author: {bookInfo?.author}</span>
+                            <span className="font-bold text-md">Name: {title}</span>
+                            <span className="text-red-500 text-sm font-semibold">Author: {author}</span>
                         </div>
                     </div>
                 </div>
-                <span className="text-center w-1/5 font-semibold text-md">${bookInfo?.price?.toString()}</span>
+                <span className="text-center w-1/5 font-semibold text-md">${price?.toString()}</span>
                 <RemoveButton bookId={bookId} username={username}/>
             </div>
         </div>

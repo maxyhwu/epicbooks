@@ -9,10 +9,10 @@ type Pageprops = {
   };
 
 type SummaryProps = {
-    bookId: Number;
-    title: String;
-    quantity: Number;
-    price: Number;
+    bookId: number;
+    title: string;
+    quantity: number;
+    price: number;
 }
   
 export default async function SalesCartPage({searchParams:{username}}: Pageprops){
@@ -20,7 +20,7 @@ export default async function SalesCartPage({searchParams:{username}}: Pageprops
     const { getBookInfo } = useBooks();
     const userInfo = await getUserInfo(username);
     const cartList = userInfo?.salesCart;
-    let summary: SummaryProps[] = [];
+    const summary: SummaryProps[] = [];
     if(cartList){
         const summaryPromises = cartList?.map(async (cart) => {
             const bookInfo = await getBookInfo(Number(cart.itemId))
@@ -52,8 +52,8 @@ export default async function SalesCartPage({searchParams:{username}}: Pageprops
                     {   
                         cartList?.map((cart)=>(
                             <CartItem
-                            bookId={cart.itemId}
-                            quantity={cart.quantity}
+                            bookId={Number(cart.itemId)}
+                            quantity={Number(cart.quantity)}
                             username={username}
                             key={cart.itemId.toString()}/>
                         ))

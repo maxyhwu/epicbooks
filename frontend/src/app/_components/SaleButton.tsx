@@ -3,7 +3,6 @@
 import { useRouter, useSearchParams } from "next/navigation";
 
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import { IconButton } from "@mui/material";
 
 export default function SaleButton() {
   const router = useRouter();

@@ -2,9 +2,8 @@
 
 import useCarts from "@/hooks/useCart";
 import { useRouter } from "next/navigation";
-import { ReactElement, ReactHTMLElement } from "react";
 type removeButtonProps = {
-    bookId: Number;
+    bookId: number;
     username: string;
 }
 export default function RemoveButton( { bookId, username }: removeButtonProps ) {

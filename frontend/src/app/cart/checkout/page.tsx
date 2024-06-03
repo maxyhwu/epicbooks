@@ -12,9 +12,9 @@ type CheckoutProps = {
     id: string;
     title: string;
     author: string;
-    quantity: Number;
-    price: Number;
-    image: String;
+    quantity: number;
+    price: number;
+    image: string;
 }
 
 export default async function CheckoutPage({searchParams:{username}}: Pageprops){
@@ -23,8 +23,8 @@ export default async function CheckoutPage({searchParams:{username}}: Pageprops)
     const { getBookInfo } = useBooks()
     const userInfo = await getUserInfo(username);
     const cartItems = userInfo?.cart;
-    let checkoutItems: CheckoutProps[] = [];
-    let totalCost: Number = 0
+    const checkoutItems: CheckoutProps[] = [];
+    let totalCost: number = 0
     if(cartItems){
         const checkoutPromise = cartItems?.map( async (cart) =>{
             const book = await getBookInfo(Number(cart.itemId))
@@ -47,17 +47,17 @@ export default async function CheckoutPage({searchParams:{username}}: Pageprops)
         <div>
             <div className="m-10 flex flex-col items-center px-5 gap-5">
                 <div className="flex flex-row justify-between w-full items-center">
-                    <TopButton cartItems={cartItems ?? []}/>
+                    <TopButton/>
                 </div>
                 {
-                    checkoutItems.map((item) =>(
+                    checkoutItems.map((item, id) =>(
                         <CheckoutItem 
                             price={item.price} 
                             author={item.author}
                             image={item.image}
                             quantity={item.quantity}
                             title={item.title}
-                            key={item.id}
+                            key={id}
                         />
                     ))
                 }

@@ -1,10 +1,10 @@
 "use client"
 import { useRouter, useSearchParams } from "next/navigation";
 type SummaryProps = {
-    bookId: Number;
-    quantity: Number;
-    price: Number;
-    title: String;
+    bookId: number;
+    quantity: number;
+    price: number;
+    title: string;
 }
 type Pageprops={
     summaries: SummaryProps[];
@@ -19,7 +19,7 @@ export default function Summary({summaries, username}:Pageprops){
         params.set("username", username)
         router.push(`/cart/checkout/?${params.toString()}`);
     }
-    let eachCost: number[] = [];
+    const eachCost: number[] = [];
     let totalCost: number= 0
     summaries.forEach((summary, index) =>{
         totalCost += Number(summary.price)*Number(summary.quantity)
@@ -30,7 +30,7 @@ export default function Summary({summaries, username}:Pageprops){
                 <h1 className="font-semibold text-2xl border-b pb-8">Order Summary</h1>
                 {   
                     summaries.map((summary, index) => (
-                        <div className="flex justify-between mt-10 mb-5 overscroll-contain">
+                        <div key={index} className="flex justify-between mt-10 mb-5 overscroll-contain">
                             <span className="font-semibold text-sm uppercase">{summary.title}</span>
                             <span className="font-semibold text-sm"> ${eachCost[index].toString()}</span>
                         </div>

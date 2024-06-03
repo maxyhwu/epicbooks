@@ -7,11 +7,11 @@ type BestSellingPreviewProps = {
   isTopThree: boolean;
   order: number;
   bookId: string;
-  bookName: String;
-  image: String;
-  price: Number;
-  author: String;
-  description: String;
+  bookName: string;
+  image: string;
+  price: number;
+  author: string;
+  description: string;
 };
 
 export default function BestSellingPreview({

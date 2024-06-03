@@ -1,7 +1,7 @@
 import { booksType } from "@/lib/types";
 
-// const baseURL = "https://epicbooks-950h.onrender.com/api"
-const baseURL = "http://localhost:8000/api"
+const baseURL = "https://epicbooks-950h.onrender.com/api"
+// const baseURL = "http://localhost:8000/api"
 export default function useBooks(){
     const generateBooks = async () => {
         const response  =  await fetch(`${baseURL}/genRandomBooks?numBooks=${50}` , {

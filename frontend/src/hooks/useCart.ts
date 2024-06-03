@@ -1,7 +1,7 @@
-const baseURL = "http://localhost:8000/api"
-//const baseURL = "https://epicbooks-950h.onrender.com/api"
+// const baseURL = "http://localhost:8000/api"
+const baseURL = "https://epicbooks-950h.onrender.com/api"
 export default function useCarts(){
-    const addToCart = async (username: string, bookId: Number, quantity: Number) => {
+    const addToCart = async (username: string, bookId: number, quantity: number) => {
         const response  =  await fetch(`${baseURL}/addToCart/?username=${username}&bookId=${bookId}&quantity=${quantity}` , {
             method: 'POST',
             headers: {
@@ -15,7 +15,7 @@ export default function useCarts(){
             console.error('Failed to add to cart:', response.status);
         }
     }
-    const removeFromCart = async (username: string, bookId: Number) => {
+    const removeFromCart = async (username: string, bookId: number) => {
         const response  =  await fetch(`${baseURL}/removeFromCart/?username=${username}&bookId=${bookId}` , {
             method: 'POST',
             headers: {
@@ -51,14 +51,14 @@ export default function useCarts(){
             }
         })
         if(response.ok){
-            const cartIdList: Number[] = await response.json();
+            const cartIdList: number[] = await response.json();
             return cartIdList;
         } else {
             console.error('Failed to get cart:', response.status);
         }
     }
     
-    const addFavorite = async (username: string, bookId: Number) => {
+    const addFavorite = async (username: string, bookId: number) => {
         const response  =  await fetch(`${baseURL}/addFavorite/?username=${username}&bookId=${bookId}` , {
             method: 'POST',
             headers: {
@@ -72,7 +72,7 @@ export default function useCarts(){
             console.error('Failed to add favorite:', response.status);
         }
     }
-    const removeFavorite = async (username: string, bookId: Number) => {
+    const removeFavorite = async (username: string, bookId: number) => {
         const response  =  await fetch(`${baseURL}/removeFavorite/?username=${username}&bookId=${bookId}` , {
             method: 'POST',
             headers: {
@@ -93,13 +93,13 @@ export default function useCarts(){
             }
         })
         if(response.ok){
-            const FavIdList: Number[] = await response.json();
+            const FavIdList: number[] = await response.json();
             return FavIdList;
         } else {
             console.error('Failed to get favorite:', response.status);
         }
     }
-    const addToSalesCart = async (username: string, bookId: Number, quantity:Number) => {
+    const addToSalesCart = async (username: string, bookId: number, quantity:number) => {
         const response  =  await fetch(`${baseURL}/addToSalesCart/?username=${username}&bookId=${bookId}&quantity=${quantity}` , {
             method: 'POST',
             headers: {
@@ -113,7 +113,7 @@ export default function useCarts(){
             console.error('Failed to add to sales cart:', response.status);
         }
     }
-    const removeFromSalesCart = async (username: string, bookId: Number) => {
+    const removeFromSalesCart = async (username: string, bookId: number) => {
         const response  =  await fetch(`${baseURL}/removeFromSalesCart/?username=${username}&bookId=${bookId}` , {
             method: 'POST',
             headers: {
@@ -135,7 +135,7 @@ export default function useCarts(){
             }
         })
         if(response.ok){
-            const salesCartIdList: Number[] = await response.json();
+            const salesCartIdList: number[] = await response.json();
             return salesCartIdList;
         } else {
             console.error('Failed to get sales cart:', response.status);

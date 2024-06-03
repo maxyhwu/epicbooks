@@ -3,8 +3,8 @@ import Image from "next/image";
 import ChangeQuantity from "./ChangeQuantity";
 import RemoveButton from "./RemoveButton";
 type CartProps ={
-    bookId: Number;
-    quantity: Number;
+    bookId: number;
+    quantity: number;
     username: string;
 }
 

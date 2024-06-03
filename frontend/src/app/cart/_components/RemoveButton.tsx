@@ -3,7 +3,7 @@
 import useCarts from "@/hooks/useCart";
 import { useRouter } from "next/navigation";
 type removeButtonProps = {
-    bookId: Number;
+    bookId: number;
     username: string;
 }
 export default function RemoveButton( { bookId, username }: removeButtonProps ) {
@@ -12,7 +12,7 @@ export default function RemoveButton( { bookId, username }: removeButtonProps ) 
 
     const handleRemove = async(e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
-        const resp= await removeFromCart(username, bookId);
+        await removeFromCart(username, bookId);
         router.refresh();
     }
 

@@ -1,16 +1,16 @@
 "use client"
 import Image from "next/image";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 // import { getProductDetails } from "../../warehouse/_components/action";
 
 
 type BookPreviewProps = {
   bookId: string;
-  bookName: String;
-  image: String;
-  price: Number;
-  author: String;
-  description: String;
+  bookName: string;
+  image: string;
+  price: number;
+  author: string;
+  description: string;
 };
 
 export default function BookPreview({
@@ -24,11 +24,7 @@ export default function BookPreview({
 }: BookPreviewProps) {
   // const productDetails = await getProductDetails(bookId);
   const router = useRouter();
-  const pathname = usePathname();
   const searchParams = useSearchParams();
-  const handleCancelSearch = () => {
-    
-  }
   const svgToDataUrl = (svgString: string): string => {
     // Decode Unicode-escaped characters
     const decodedSvgString = svgString.replace(/\\u([\dA-F]{4})/gi, (_, group) =>

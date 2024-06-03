@@ -22,8 +22,8 @@ export default function RecomSelect() {
     }
   };
 
-  var queryString = "";
-  var isFirst = true;
+  let queryString = "";
+  let isFirst = true;
 
   const handleSave = async () => {
     if (selectedCategories.length == 0) {

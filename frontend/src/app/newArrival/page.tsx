@@ -30,10 +30,10 @@ export default async function Home() {
               <BookPreview
               bookId={newArrival?.id?.toString()}
               bookName={newArrival.title}
-              price={newArrival.price}
-              author={newArrival.author}
-              description={newArrival.description}
-              image={newArrival.image}
+              price={Number(newArrival.price)}
+              author={newArrival.author.toString()}
+              description={newArrival.description.toString()}
+              image={newArrival.image.toString()}
               key={i}
             />
             ))
@@ -48,10 +48,10 @@ export default async function Home() {
               <BookPreview
               bookId={newArrival?.id?.toString()}
               bookName={newArrival.title}
-              price={newArrival.price}
-              author={newArrival.author}
-              description={newArrival.description}
-              image={newArrival.image}
+              price={Number(newArrival.price)}
+              author={newArrival.author.toString()}
+              description={newArrival.description.toString()}
+              image={newArrival.image.toString()}
               key={i}
             />
             ))
@@ -65,10 +65,10 @@ export default async function Home() {
               <BookPreview
               bookId={newArrival?.id?.toString()}
               bookName={newArrival.title}
-              price={newArrival.price}
-              author={newArrival.author}
-              description={newArrival.description}
-              image={newArrival.image}
+              price={Number(newArrival.price)}
+              author={newArrival.author.toString()}
+              description={newArrival.description.toString()}
+              image={newArrival.image.toString()}
               key={i}
             />
             ))
@@ -82,10 +82,10 @@ export default async function Home() {
               <BookPreview
               bookId={newArrival?.id?.toString()}
               bookName={newArrival.title}
-              price={newArrival.price}
-              author={newArrival.author}
-              description={newArrival.description}
-              image={newArrival.image}
+              price={Number(newArrival.price)}
+              author={newArrival.author.toString()}
+              description={newArrival.description.toString()}
+              image={newArrival.image.toString()}
               key={i}
             />
             ))
@@ -99,10 +99,10 @@ export default async function Home() {
               <BookPreview
               bookId={newArrival?.id?.toString()}
               bookName={newArrival.title}
-              price={newArrival.price}
-              author={newArrival.author}
-              description={newArrival.description}
-              image={newArrival.image}
+              price={Number(newArrival.price)}
+              author={newArrival.author.toString()}
+              description={newArrival.description.toString()}
+              image={newArrival.image.toString()}
               key={i}
             />
             ))

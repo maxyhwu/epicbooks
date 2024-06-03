@@ -1,8 +1,6 @@
 import { userType } from "@/lib/types";
 import bcrypt from "bcryptjs";
-import { useSearchParams } from "next/navigation";
 export default function useUsers(){
-    const searchParams = useSearchParams();
     const getUserInfo = async(username: string) =>{
         const response  =  await fetch(`http://localhost:8000/api/getUserInfo/?username=${username}`, {
             method: 'GET',

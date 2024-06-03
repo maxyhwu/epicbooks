@@ -1,7 +1,7 @@
 import CartButton from "@/app/_components/CartButton";
 import MyFavButton from "@/app/_components/MyFavButton";
-import RecomSelect from "./_components/RecomSelect";
 import SaleButton from "../_components/SaleButton";
+import RecomSelect from "./_components/RecomSelect";
 
 export default async function Home() {
 

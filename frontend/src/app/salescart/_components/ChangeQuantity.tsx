@@ -3,9 +3,9 @@ import useCarts from "@/hooks/useCart";
 import { useRouter } from "next/navigation";
 
 type Pageprops = {
-    username: String,
-    quantity: Number,
-    bookId: Number,
+    username: string,
+    quantity: number,
+    bookId: number,
 }
 export default function ChangeQuantity({quantity, username, bookId}: Pageprops){
     // const [newQuantity, setNewQuantity] = useState()
@@ -13,12 +13,12 @@ export default function ChangeQuantity({quantity, username, bookId}: Pageprops){
     const {addToSalesCart} = useCarts()
     const handleRemoveItem = async(e: React.MouseEvent<HTMLButtonElement>) =>{
         e.preventDefault();
-        const resp= await addToSalesCart(username.toString(), bookId, -1);
+        await addToSalesCart(username.toString(), bookId, -1);
         router.refresh();
     }
     const handleAddItem = async(e: React.MouseEvent<HTMLButtonElement>) =>{
         e.preventDefault();
-        const resp= await addToSalesCart(username.toString(), bookId, 1);
+        await addToSalesCart(username.toString(), bookId, 1);
         router.refresh();
     }
     return(

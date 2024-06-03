@@ -9,10 +9,20 @@ type Pageprops = {
   };
 
 type SummaryProps = {
-    bookId: Number;
-    title: String;
-    quantity: Number;
-    price: Number;
+    bookId: number;
+    title: string;
+    quantity: number;
+    price: number;
+}
+
+type cartItemProps = {
+    bookId: number;
+    quantity: number;
+    username: string;
+    image: string;
+    title: string;
+    author: string;
+    price: number;
 }
   
 export default async function CartPage({searchParams:{username}}: Pageprops){
@@ -20,21 +30,39 @@ export default async function CartPage({searchParams:{username}}: Pageprops){
     const { getBookInfo } = useBooks();
     const userInfo = await getUserInfo(username);
     const cartList = userInfo?.cart;
-    let summary: SummaryProps[] = [];
+    const summary: SummaryProps[] = [];
+    const cartItem: cartItemProps[] = []
     if(cartList){
         const summaryPromises = cartList?.map(async (cart) => {
             const bookInfo = await getBookInfo(Number(cart.itemId))
-            const temp = {
+            const summaryTemp = {
                 bookId: Number(cart.itemId),
                 title: bookInfo?.title,
                 quantity: cart.quantity,
                 price: bookInfo?.price
             } as SummaryProps
-            return temp
+            return summaryTemp
         })
         const summaryResults = await Promise.all(summaryPromises);
         summary.push(...summaryResults);
+
+        const cartItemPromises = cartList?.map(async (cart) => {
+            const bookInfo = await getBookInfo(Number(cart.itemId))
+            const cartItemTemp = {
+                bookId: Number(cart.itemId),
+                title: bookInfo?.title,
+                quantity: cart.quantity,
+                price: bookInfo?.price,
+                author: bookInfo?.author,
+                image: bookInfo?.image,
+                username: username,
+            } as cartItemProps
+            return cartItemTemp
+        })
+        const cartItemResults = await Promise.all(cartItemPromises);
+        cartItem.push(...cartItemResults);
     }
+    
     return(
         <div className="flex shadow-md my-3">
             <div className="w-3/4 bg-white px-10 py-10">
@@ -50,12 +78,16 @@ export default async function CartPage({searchParams:{username}}: Pageprops){
                 </div>
                 <div>
                     {   
-                        cartList?.map((cart)=>(
+                        cartItem?.map((cart)=>(
                             <CartItem
-                            bookId={cart.itemId}
+                            bookId={cart.bookId}
                             quantity={cart.quantity}
                             username={username}
-                            key={cart.itemId.toString()}/>
+                            title={cart.title.toString()}
+                            author={cart.author.toString()}
+                            price={cart.price}
+                            image={cart.image.toString()}
+                            key={cart.bookId.toString()}/>
                         ))
                         
                     }   

@@ -1,15 +1,13 @@
 "use client"
 
-import EmailIcon from '@mui/icons-material/Email';
+import useUsers from '@/hooks/useUsers';
+import CheckIcon from '@mui/icons-material/Check';
 import LockIcon from '@mui/icons-material/Lock';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import PersonIcon from '@mui/icons-material/Person';
-import CheckIcon from '@mui/icons-material/Check';
 import { IconButton } from '@mui/material';
-import { useState } from 'react';
-import useUsers from '@/hooks/useUsers';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useState } from 'react';
 
 export default function ResetPasswordForm() {
     const [visiblity, setVisibility] = useState(false);

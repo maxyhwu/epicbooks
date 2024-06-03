@@ -1,10 +1,10 @@
 "use client"
 import { useRouter, useSearchParams } from "next/navigation";
 type SummaryProps = {
-    bookId: Number;
-    quantity: Number;
-    price: Number;
-    title: String;
+    bookId: number;
+    quantity: number;
+    price: number;
+    title: string;
 }
 type Pageprops={
     summaries: SummaryProps[];
@@ -19,7 +19,7 @@ export default function Summary({summaries, username}:Pageprops){
         params.set("username", username)
         router.push(`/salescart/checkout/?${params.toString()}`);
     }
-    let eachCost: number[] = [];
+    const eachCost: number[] = [];
     let totalCost: number= 0
     summaries.forEach((summary, index) =>{
         totalCost += Math.floor(Number(summary.price)*Number(summary.quantity)*0.8)
@@ -30,18 +30,12 @@ export default function Summary({summaries, username}:Pageprops){
                 <h1 className="font-semibold text-2xl border-b pb-8">Sale Summary</h1>
                 {   
                     summaries.map((summary, index) => (
-                        <div className="flex justify-between mt-10 mb-5 overscroll-contain">
+                        <div key={index} className="flex justify-between mt-10 mb-5 overscroll-contain">
                             <span className="font-semibold text-sm uppercase">{summary.title}</span>
                             <span className="font-semibold text-sm"> ${eachCost[index].toString()}</span>
                         </div>
                     ))
                 }   
-                {/* <div>
-                    <label className="font-medium inline-block mb-3 text-sm uppercase">Shipping</label>
-                    <select className="block p-2 text-gray-600 w-full text-sm">
-                        <option>Standard shipping - $10.00</option>
-                    </select>
-                </div> */}
                 <div className="border-t mt-8">
                     <div className="flex font-semibold justify-between py-6 text-sm uppercase">
                         <span>Total</span>

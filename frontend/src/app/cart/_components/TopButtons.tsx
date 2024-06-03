@@ -1,13 +1,8 @@
 "use client"
 import useCarts from "@/hooks/useCart";
-import { cartItem } from "@/lib/types";
 import { useRouter, useSearchParams } from "next/navigation";
 
-type ConfirmProps = {
-    cartItems: cartItem[];
-}
-
-export default function TopButton({cartItems}: ConfirmProps){
+export default function TopButton(){
     const router = useRouter()
     const {clearCart} = useCarts()
     const searchParams = useSearchParams();

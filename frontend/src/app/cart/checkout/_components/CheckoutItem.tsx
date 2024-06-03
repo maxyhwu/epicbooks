@@ -3,12 +3,12 @@ import Image from "next/image";
 type CheckoutItemProps = {
     title: string;
     author: string;
-    quantity: Number;
-    price: Number;
-    image: String;
+    quantity: number;
+    price: number;
+    image: string;
 }
 
-export default async function CheckoutItem({ title, author, quantity, price, image }:CheckoutItemProps){
+export default function CheckoutItem({ title, author, quantity, price, image }:CheckoutItemProps){
     let eachTotal = 0;
     eachTotal = Number(price)*Number(quantity)
     const svgToDataUrl = (svgString: string): string => {

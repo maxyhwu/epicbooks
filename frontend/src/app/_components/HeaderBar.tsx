@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import GetSerachName from "./GetSearchName";
 import LoginButton from "./LoginButton";
 
 export default function HeaderBar() {

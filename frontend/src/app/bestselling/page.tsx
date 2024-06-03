@@ -2,17 +2,10 @@ import CartButton from "@/app/_components/CartButton";
 import MyFavButton from "@/app/_components/MyFavButton";
 import useBooks from "@/hooks/useBook";
 import { booksType } from "@/lib/types";
-import BestSellingPreview from "./_components/BestSellingPreview";
 import SaleButton from "../_components/SaleButton";
-type Pageprops = {
-  searchParams: {
-    username: string,
-  };
-};
+import BestSellingPreview from "./_components/BestSellingPreview";
 
-export default async function Home({
-  searchParams: { username },
-}: Pageprops) {
+export default async function Home() {
   const {getBestSellings} = useBooks();
   const bestsellings = await getBestSellings() ?? [];
   // Step 1: Sort the array based on the price in descending order
@@ -44,11 +37,11 @@ export default async function Home({
               isTopThree={true}
               order={index+1}
               bookId={book.id.toString()}
-              bookName={book.title}
-              price={book.price}
-              author={book.author}
-              description={book.description}
-              image={book.image}
+              bookName={book.title.toString()}
+              price={Number(book.price)}
+              author={book.author.toString()}
+              description={book.description.toString()}
+              image={book.image.toString()}
               key={book.id.toString()}
             />
             ))
@@ -59,11 +52,11 @@ export default async function Home({
               isTopThree={false}
               order={0}
               bookId={book.id.toString()}
-              bookName={book.title}
-              price={book.price}
-              author={book.author}
-              description={book.description}
-              image={book.image}
+              bookName={book.title.toString()}
+              price={Number(book.price)}
+              author={book.author.toString()}
+              description={book.description.toString()}
+              image={book.image.toString()}
               key={book.id.toString()}
             />
             ))

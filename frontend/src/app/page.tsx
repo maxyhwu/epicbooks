@@ -2,9 +2,9 @@ import useBooks from "@/hooks/useBook";
 import { booksType } from "@/lib/types";
 import BookPreview from "./_components/BookPreview";
 import CartButton from "./_components/CartButton";
+import GetSerachName from "./_components/GetSearchName";
 import MyFavButton from "./_components/MyFavButton";
 import SaleButton from "./_components/SaleButton";
-import GetSerachName from "./_components/GetSearchName";
 type Pageprops = {
   searchParams: {
     searchName: string;
@@ -14,7 +14,7 @@ type Pageprops = {
 export default async function Home({
   searchParams: { searchName },
 }: Pageprops) {
-  const { generateBooks, getAllBooks } = useBooks();
+  const { getAllBooks } = useBooks();
   // const isTrue = await generateBooks();
   // console.log(isTrue);
   const books = await getAllBooks(searchName ?? "");
@@ -38,10 +38,10 @@ export default async function Home({
               <BookPreview
               bookId={book.id.toString()}
               bookName={book.title}
-              price={book.price}
-              author={book.author}
-              description={book.description}
-              image={book.image}
+              price={Number(book.price)}
+              author={book.author.toString()}
+              description={book.description.toString()}
+              image={book.image.toString()}
               // mode={mode}
               key={book.id.toString()}
             />

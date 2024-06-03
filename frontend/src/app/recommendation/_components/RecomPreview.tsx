@@ -1,17 +1,17 @@
 "use client"
 import Image from "next/image";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 // import { getProductDetails } from "../../warehouse/_components/action";
 
 
 type BookPreviewProps = {
   bookId: string;
-  bookName: String;
-  image: String;
-  price: Number;
-  author: String;
-  description: String;
-  genres: [String];
+  bookName: string;
+  image: string;
+  price: number;
+  author: string;
+  description: string;
+  genres: [string];
 };
 
 export default function RecomPreview({
@@ -22,15 +22,10 @@ export default function RecomPreview({
   author,
   description,
   genres,
-  // mode,
 }: BookPreviewProps) {
   // const productDetails = await getProductDetails(bookId);
   const router = useRouter();
-  const pathname = usePathname();
   const searchParams = useSearchParams();
-  const handleCancelSearch = () => {
-    
-  }
   const svgToDataUrl = (svgString: string): string => {
     // Decode Unicode-escaped characters
     const decodedSvgString = svgString.replace(/\\u([\dA-F]{4})/gi, (_, group) =>
@@ -86,7 +81,7 @@ export default function RecomPreview({
           </div>
       </div>
       <div className="flex gap-2">
-        {genres.map((genre) => (<p>#{genre}</p>))}
+        {genres.map((genre, i) => (<p key={i}>#{genre}</p>))}
       </div>
     </div>
   );

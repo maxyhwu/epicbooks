@@ -3,7 +3,6 @@
 import { useRouter, useSearchParams } from "next/navigation";
 
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import { IconButton } from "@mui/material";
 
 
 export default function MyFavButton() {

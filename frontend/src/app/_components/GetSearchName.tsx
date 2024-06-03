@@ -2,25 +2,14 @@
 
 import { useRef } from "react";
 
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import { Search } from "lucide-react";
-import { IconButton } from "@mui/material";
-import CancelIcon from "@mui/icons-material/Cancel";
 
 export default function GetSerachName() {
   const searchInputRef = useRef<HTMLInputElement>(null);;
   const router = useRouter();
-  const pathname = usePathname();
   const searchParams = useSearchParams();
-  // const handleCancelSearch = () => {
-  //   const params = new URLSearchParams(searchParams);
-  //   params.set("searchName", ""!);
-  //   if (searchInputRef.current) {
-  //     searchInputRef.current.value = "";
-  //   }
-  //   router.push(`${pathname}?${params.toString()}`);
-  // }
 
   const handleSearch = () => {
     const searchString = searchInputRef.current?.value;
@@ -40,11 +29,7 @@ export default function GetSerachName() {
         ref={searchInputRef}
       >
       </input>
-      {/* <div className="border-2">
-        <IconButton onClick={handleCancelSearch}>
-          <CancelIcon/>
-        </IconButton>
-      </div> */}
+
       <button
         className="hover:shadow-xs relative z-[2] border border-black bg-buttons flex items-center rounded-md px-6 py-2.5 text-xs font-medium shadow-md focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
         type="button"
