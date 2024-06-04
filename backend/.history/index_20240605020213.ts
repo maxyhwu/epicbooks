@@ -117,12 +117,7 @@ app.get('/api/getNewArrival', async(req:any, res:any) => {
 app.get('/api/getBookInfo', async(req:any, res:any) => {
     const bookId = Number(req.query.bookId) || 12345678;
     const bookInfo: booksType = await booksModel.findOne({id: bookId});
-    if (!bookInfo) {
-        res.status(404).send('Book not found');
-    }
-    else {
-        res.send(bookInfo);
-    }
+    res.send(bookInfo);
 });
 
 

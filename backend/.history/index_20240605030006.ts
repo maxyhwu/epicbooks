@@ -91,7 +91,12 @@ app.get('/api/getRecommendations', async(req:any, res:any) => {
     const genres = req.query.genres as string;
     const genresArr = genres.split(',') as Array<string>;
     const recommendations:booksType[] = await booksModel.find({genre: {$in: genresArr}});
-    res.send(recommendations);
+    if(recommendations.length === 0) {
+        res.status(404).send('No recommendations found');
+    }
+    else {
+        res.send(recommendations);
+    }
 });
 
 app.get('/api/getNewArrival', async(req:any, res:any) => {
@@ -111,7 +116,12 @@ app.get('/api/getNewArrival', async(req:any, res:any) => {
         end.setDate(today.getDate() - limits[i][1]);
         newArrival[i] = await booksModel.find({publishDate: {$gte: end, $lt: start}});
     }
-    res.send(newArrival);
+    if(newArrival.length === 0) {
+        res.status(404).send('No new arrival found');
+    }
+    else {
+        res.send(newArrival);
+    }
 });
 
 app.get('/api/getBookInfo', async(req:any, res:any) => {
