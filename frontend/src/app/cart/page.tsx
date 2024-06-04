@@ -32,7 +32,9 @@ export default async function CartPage({searchParams:{username}}: Pageprops){
                 bookId: Number(cart.itemId),
                 title: bookInfo?.title,
                 quantity: cart.quantity,
-                price: bookInfo?.price
+                price: bookInfo?.price,
+                author: bookInfo?.author,
+                image: bookInfo?.image,
             } as SummaryProps
             return summaryTemp
         })

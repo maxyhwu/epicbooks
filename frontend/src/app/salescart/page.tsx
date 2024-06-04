@@ -31,7 +31,9 @@ export default async function SalesCartPage({searchParams:{username}}: Pageprops
                 bookId: Number(cart.itemId),
                 title: bookInfo?.title,
                 quantity: cart.quantity,
-                price: bookInfo?.price
+                price: bookInfo?.price,
+                author: bookInfo?.author,
+                image: bookInfo?.image,
             } as SummaryProps
             return temp
         })
@@ -62,7 +64,7 @@ export default async function SalesCartPage({searchParams:{username}}: Pageprops
                                 image={summary[index].image}
                                 author={summary[index].author}
                                 price={summary[index].price}
-                                key={cart.itemId.toString()}
+                                key={index}
                             />
                         ))
                         

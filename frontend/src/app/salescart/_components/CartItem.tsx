@@ -1,7 +1,7 @@
 import Image from "next/image";
 import ChangeQuantity from "./ChangeQuantity";
 import RemoveButton from "./RemoveButton";
-type CartProps ={
+type CartProps = {
     bookId: number;
     title: string;
     quantity: number;

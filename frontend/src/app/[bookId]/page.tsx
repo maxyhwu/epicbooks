@@ -2,8 +2,8 @@ import CartButton from "@/app/_components/CartButton";
 import useBooks from "@/hooks/useBook";
 import useUsers from "@/hooks/useUsers";
 import MyFavButton from "../_components/MyFavButton";
-import BookDetail from "./_components/BookDetail";
 import SaleButton from "../_components/SaleButton";
+import BookDetail from "./_components/BookDetail";
 
 type Pageprops = {
   searchParams: {
@@ -18,9 +18,7 @@ export default async function BookDetailPage({searchParams:{bookId, username}}: 
   const { isInFav } = useUsers();
   const bookInfo = await getBookInfo(bookId);
   const isFav = await isInFav(username, String(bookId))
-  
-  
-  
+    
   return(
     <main className="flex min-h-screen items-start rounded-b-xl border-2">
     <div className="w-full flex flex-col justify-center">
