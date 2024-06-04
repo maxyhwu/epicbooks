@@ -165,7 +165,7 @@ export default function useUsers(){
     const resetPassword = async(token: string, newPassword:string) => {
         try {
             const hashedPassword = await bcrypt.hash(newPassword, 10);
-            const resetPasswordResponse = await fetch(`http://localhost:8000/api/resetPassword`, {
+            const resetPasswordResponse = await fetch(`${baseURL}/resetPassword`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
