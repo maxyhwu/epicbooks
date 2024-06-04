@@ -115,7 +115,7 @@ app.get('/api/getNewArrival', async(req:any, res:any) => {
 });
 
 app.get('/api/getBookInfo', async(req:any, res:any) => {
-    const bookId = Number(req.query.bookId) || 12345678;
+    const bookId = req.query.bookId as number;
     const bookInfo: booksType = await booksModel.findOne({id: bookId});
     res.send(bookInfo);
 });
