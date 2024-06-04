@@ -544,7 +544,7 @@ app.put('/api/genRandomBooks', async(req:any, res:any) => {
     }
 
     const decideRandomDate = () => {
-        const random = Math.floor(Math.random() * 6);
+        const random = Math.floor(Math.random() * 5);
         switch(random) {
             case 0:
                 return genToday();
@@ -585,7 +585,7 @@ app.put('/api/genRandomBooks', async(req:any, res:any) => {
         const title = uniqueNamesGenerator(randomTitleConfig) as string;
         const jabber = new Jabber;
         const description = jabber.createParagraph(50);
-        const randomDate = decideRandomDate().toISOString() as string;
+        const randomDate = 
         const randomBook = {
             id: Math.floor(Math.random() * 1000000) as number,
             title: title,
@@ -594,7 +594,7 @@ app.put('/api/genRandomBooks', async(req:any, res:any) => {
             sales: Math.floor(Math.random() * 1000000) as number,
             genre: genres.sort(() => Math.random() - 0.5).slice(0, Math.ceil(Math.random() * (genres.length-1))) as Array<string>,
             publisher: uniqueNamesGenerator(randomNameConfig) as string,
-            publishDate: randomDate,
+            publishDate: getRandomDateWithinLastYear().toISOString() as string,
             language: uniqueNamesGenerator(randomLanguageConfig) as string,
             image: jdenticon.toSvg(Math.random().toString(36).substring(7), 200) as string,
             description: description,

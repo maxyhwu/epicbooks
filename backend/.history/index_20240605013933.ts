@@ -178,7 +178,7 @@ app.post('/api/forgotPassword', async(req:any, res:any) => {
     const sendResetEmail = async(username: string, email: string) => {
         // Generate a token
         const token: string = generateToken();
-        const link: string = `https://webapp-epicbooks.vercel.app/reset-password?token=${token}`;
+        const link: string = `http://localhost:3000/reset-password?token=${token}`;
 
         // Create a nodemailer transporter
         const transporter = nodemailer.createTransport({
@@ -512,51 +512,9 @@ app.put('/api/genRandomBooks', async(req:any, res:any) => {
         // Generate a random month (0-11 corresponds to January-December)
         const randomMonth = randomYear === currentYear ? Math.floor(Math.random() * (currentDate.getMonth() + 1)) : Math.floor(Math.random() * 12);
         // Generate a random day within the selected month and year
-        const randomDay = randomYear === currentYear && randomMonth === currentDate.getMonth() ? Math.floor(Math.random() * currentDate.getDate()) : Math.floor(Math.random() * 31);
+        const randomDay = Math.floor(Math.random() * (new Date(randomYear, randomMonth + 1, 0).getDate())) + 1;
         // Create and return the random date
         return new Date(randomYear, randomMonth, randomDay);
-    }
-
-    const genToday = () => {
-        const today = new Date();
-        return today;
-    }
-
-    const genLastSevenDays = () => {
-        const today = new Date();
-        const lastSevenDays = new Date(today);
-        lastSevenDays.setDate(today.getDate() - 7);
-        return lastSevenDays;
-    }
-
-    const genLastThirtyDays = () => {
-        const today = new Date();
-        const lastThirtyDays = new Date(today);
-        lastThirtyDays.setDate(today.getDate() - 30);
-        return lastThirtyDays;
-    }
-
-    const genLastNinetyDays = () => {
-        const today = new Date();
-        const lastNinetyDays = new Date(today);
-        lastNinetyDays.setDate(today.getDate() - 90);
-        return lastNinetyDays;
-    }
-
-    const decideRandomDate = () => {
-        const random = Math.floor(Math.random() * 6);
-        switch(random) {
-            case 0:
-                return genToday();
-            case 1:
-                return genLastSevenDays();
-            case 2:
-                return genLastThirtyDays();
-            case 3:
-                return genLastNinetyDays();
-            default:
-                return genToday();
-        }
     }
 
     const numBooks = req.query.numBooks ? req.query.numBooks : 15 as number;
@@ -585,7 +543,6 @@ app.put('/api/genRandomBooks', async(req:any, res:any) => {
         const title = uniqueNamesGenerator(randomTitleConfig) as string;
         const jabber = new Jabber;
         const description = jabber.createParagraph(50);
-        const randomDate = decideRandomDate().toISOString() as string;
         const randomBook = {
             id: Math.floor(Math.random() * 1000000) as number,
             title: title,
@@ -594,7 +551,7 @@ app.put('/api/genRandomBooks', async(req:any, res:any) => {
             sales: Math.floor(Math.random() * 1000000) as number,
             genre: genres.sort(() => Math.random() - 0.5).slice(0, Math.ceil(Math.random() * (genres.length-1))) as Array<string>,
             publisher: uniqueNamesGenerator(randomNameConfig) as string,
-            publishDate: randomDate,
+            publishDate: getRandomDateWithinLastYear().toISOString() as string,
             language: uniqueNamesGenerator(randomLanguageConfig) as string,
             image: jdenticon.toSvg(Math.random().toString(36).substring(7), 200) as string,
             description: description,
