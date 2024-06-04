@@ -47,7 +47,7 @@ export default function CartItem({ bookId, quantity, username, image, title, aut
                     </div>
                 </div>
                 <ChangeQuantity quantity={quantity} bookId={bookId} username={username}/>
-                <span className="text-center w-1/5 font-semibold text-sm">${price.toString()}</span>
+                <span className="text-center w-1/5 font-semibold text-sm">${price?.toString()}</span>
                 <span className="text-center w-1/5 font-semibold text-sm">${eachTotal.toString()}</span>
             </div>
         </div>

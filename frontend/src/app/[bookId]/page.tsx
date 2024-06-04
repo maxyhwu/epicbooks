@@ -6,18 +6,18 @@ import SaleButton from "../_components/SaleButton";
 import BookDetail from "./_components/BookDetail";
 
 type Pageprops = {
+  params: { bookId: number },
   searchParams: {
-    bookId: number,
     username: string,
   }
 };
 
 // export default ProductPage;
-export default async function BookDetailPage({searchParams:{bookId, username}}: Pageprops){
+export default async function BookDetailPage({searchParams:{username}, params}: Pageprops){
   const { getBookInfo } = useBooks();
   const { isInFav } = useUsers();
-  const bookInfo = await getBookInfo(bookId);
-  const isFav = await isInFav(username, String(bookId))
+  const bookInfo = await getBookInfo(params.bookId);
+  const isFav = await isInFav(username, String(params.bookId))
     
   return(
     <main className="flex min-h-screen items-start rounded-b-xl border-2">
@@ -33,7 +33,7 @@ export default async function BookDetailPage({searchParams:{bookId, username}}: 
       <div className="flex items-center justify-center pt-10 px-10 ">
         <div className="flex justify-center bg-custom h-screen w-screen rounded-lg ">
           <BookDetail
-            id={bookId}
+            id={params.bookId}
             username={username}
             author={bookInfo?.author as string}
             price={bookInfo?.price as number}
@@ -45,7 +45,7 @@ export default async function BookDetailPage({searchParams:{bookId, username}}: 
             genre={bookInfo?.genre as [string]}
             language={bookInfo?.language as string}
             description={bookInfo?.description as string}
-            key={bookId}
+            key={params.bookId}
             isFav={isFav ?? false}
           />
         </div>

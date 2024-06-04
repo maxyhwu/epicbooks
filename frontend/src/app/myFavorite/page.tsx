@@ -17,7 +17,7 @@ type FavoriteProps ={
 }
 export default async function MyFavoritePage({searchParams:{username}}: Pageprops){
     const { getUserInfo } = useUsers(); 
-    const {getBookInfo} = useBooks();
+    const { getBookInfo } = useBooks();
     const userInfo = await getUserInfo(username);
     const favList = userInfo?.favorite;
     const bookList: FavoriteProps[] = [];
@@ -25,7 +25,7 @@ export default async function MyFavoritePage({searchParams:{username}}: Pageprop
         const favPromises = favList?.map(async (fav) =>{
             const bookInfo = await getBookInfo(Number(fav));
             const bookTemp = {
-                bookId: fav,
+                bookId: Number(fav),
                 username: username,
                 image: bookInfo?.image,
                 title: bookInfo?.title,

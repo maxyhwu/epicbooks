@@ -52,9 +52,9 @@ export default async function CartPage({searchParams:{username}}: Pageprops){
                 </div>
                 <div className="flex mt-8 mb-6">
                     <h3 className="font-semibold text-gray-600 text-sm uppercase w-2/5">Product Details</h3>
-                    <h3 className="font-semibold text-center text-gray-600 text-sm uppercase w-1/5 text-center">Quantity</h3>
-                    <h3 className="font-semibold text-center text-gray-600 text-sm uppercase w-1/5 text-center">Price</h3>
-                    <h3 className="font-semibold text-center text-gray-600 text-sm uppercase w-1/5 text-center">Total</h3>
+                    <h3 className="font-semibold text-gray-600 text-sm uppercase w-1/5 text-center">Quantity</h3>
+                    <h3 className="font-semibold text-gray-600 text-sm uppercase w-1/5 text-center">Price</h3>
+                    <h3 className="font-semibold text-gray-600 text-sm uppercase w-1/5 text-center">Total</h3>
                 </div>
                 <div>
                     {   

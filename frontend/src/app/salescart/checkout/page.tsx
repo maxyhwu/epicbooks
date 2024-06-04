@@ -22,7 +22,7 @@ export default async function CheckoutPage({searchParams:{username}}: Pageprops)
     const {getUserInfo} = useUsers()
     const { getBookInfo } = useBooks()
     const userInfo = await getUserInfo(username);
-    const cartItems = userInfo?.cart;
+    const cartItems = userInfo?.salesCart;
     const checkoutItems: CheckoutProps[] = [];
     let totalCost: number = 0
     if(cartItems){

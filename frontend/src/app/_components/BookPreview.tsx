@@ -64,10 +64,10 @@ export default function BookPreview({
                 {/* <p className="text-sm font-semibold">{"NTD " + minPrice}</p> */}
               </div>
               <div className="bg-white h-8 border border-black rounded-md p-0.5">
-                <p className="text-sm m-1">Author: {author}</p>
+                <p className="text-sm m-1">Author: {author?.substring(0, 10)}</p>
               </div>
               <div className="bg-white h-8 border border-black rounded-md p-0.5">
-                <p className="text-sm m-1">Price: {price?.toString()}</p>  
+                <p className="text-sm m-1">Price: ${price?.toString()}</p>  
               </div>
             </div>
           </div>
