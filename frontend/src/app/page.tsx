@@ -42,7 +42,6 @@ export default async function Home({
               author={book.author.toString()}
               description={book.description.toString()}
               image={book.image.toString()}
-              // mode={mode}
               key={book.id.toString()}
             />
             ))

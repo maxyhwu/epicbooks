@@ -10,13 +10,6 @@ type Pageprops = {
 
 type SummaryProps = {
     bookId: number;
-    title: string;
-    quantity: number;
-    price: number;
-}
-
-type cartItemProps = {
-    bookId: number;
     quantity: number;
     username: string;
     image: string;
@@ -24,6 +17,7 @@ type cartItemProps = {
     author: string;
     price: number;
 }
+
   
 export default async function CartPage({searchParams:{username}}: Pageprops){
     const { getUserInfo } = useUsers(); 
@@ -31,7 +25,6 @@ export default async function CartPage({searchParams:{username}}: Pageprops){
     const userInfo = await getUserInfo(username);
     const cartList = userInfo?.cart;
     const summary: SummaryProps[] = [];
-    const cartItem: cartItemProps[] = []
     if(cartList){
         const summaryPromises = cartList?.map(async (cart) => {
             const bookInfo = await getBookInfo(Number(cart.itemId))
@@ -46,21 +39,6 @@ export default async function CartPage({searchParams:{username}}: Pageprops){
         const summaryResults = await Promise.all(summaryPromises);
         summary.push(...summaryResults);
 
-        const cartItemPromises = cartList?.map(async (cart) => {
-            const bookInfo = await getBookInfo(Number(cart.itemId))
-            const cartItemTemp = {
-                bookId: Number(cart.itemId),
-                title: bookInfo?.title,
-                quantity: cart.quantity,
-                price: bookInfo?.price,
-                author: bookInfo?.author,
-                image: bookInfo?.image,
-                username: username,
-            } as cartItemProps
-            return cartItemTemp
-        })
-        const cartItemResults = await Promise.all(cartItemPromises);
-        cartItem.push(...cartItemResults);
     }
     
     return(
@@ -78,16 +56,16 @@ export default async function CartPage({searchParams:{username}}: Pageprops){
                 </div>
                 <div>
                     {   
-                        cartItem?.map((cart)=>(
+                        cartList?.map((cart, index)=>(
                             <CartItem
-                            bookId={cart.bookId}
+                            bookId={cart.itemId}
                             quantity={cart.quantity}
                             username={username}
-                            title={cart.title.toString()}
-                            author={cart.author.toString()}
-                            price={cart.price}
-                            image={cart.image.toString()}
-                            key={cart.bookId.toString()}/>
+                            title={summary[index].title}
+                            author={summary[index].author}
+                            price={summary[index].price}
+                            image={summary[index].image}
+                            key={index}/>
                         ))
                         
                     }   

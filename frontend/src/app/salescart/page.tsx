@@ -13,6 +13,9 @@ type SummaryProps = {
     title: string;
     quantity: number;
     price: number;
+    author: string;
+    image: string;
+    username: string;
 }
   
 export default async function SalesCartPage({searchParams:{username}}: Pageprops){
@@ -50,12 +53,17 @@ export default async function SalesCartPage({searchParams:{username}}: Pageprops
                 </div>
                 <div>
                     {   
-                        cartList?.map((cart)=>(
+                        cartList?.map((cart, index)=>(
                             <CartItem
-                            bookId={Number(cart.itemId)}
-                            quantity={Number(cart.quantity)}
-                            username={username}
-                            key={cart.itemId.toString()}/>
+                                bookId={Number(cart.itemId)}
+                                quantity={Number(cart.quantity)}
+                                username={username}
+                                title={summary[index].title}
+                                image={summary[index].image}
+                                author={summary[index].author}
+                                price={summary[index].price}
+                                key={cart.itemId.toString()}
+                            />
                         ))
                         
                     }   
