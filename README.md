@@ -49,17 +49,53 @@ yarn dev
 
 ```GET /api/getUserInfo?username=``` // 獲得使用者個人資料
 
-### 喜歡的書籍列表、想購買的書籍列表、想賣出的書籍列表相關
+### 喜歡的書籍列表相關
 ```POST /api/addFavorite``` // 添加至喜歡列表
+
+```POST /api/removeFavorite``` // 從喜歡列表移除
+
+```GET /api/getFavorite``` // 獲得喜歡列表
+
+### 想購買的書籍列表相關
 
 ```POST /api/addToCart``` // 添加至購物車
 
-```POST /api/addToSalesCart``` // 添加至賣出列表
+```POST /api/removeFromCart``` // 從購物車移除
 
+```POST /api/clearCart``` // 清空購物車
+
+```GET /api/getCart``` // 獲得購物車中的書籍列表
+
+### 想賣出的書籍列表相關
+```POST /api/addTSalesCart``` // 添加至想賣出的清單
+
+```POST /api/removeFromSalesCart``` // 從想賣出的清單移除
+
+```POST /api/clearSalesCart``` // 清空想賣出的清單
+
+```GET /api/getSalesCart``` // 獲得想賣出的清單中的書籍列表
+
+### 隨機資料相關
+```GET /api/getRandomBooks``` // 獲取現有書籍列表
+
+```PUT /api/genRandomBooks``` // 生成隨機的書籍
+
+```DELETE /api/delRandomBooks``` // 刪除所有書籍
+
+```GET /api/getNullUser``` // 獲取測試用的假帳號資料
+
+```PUT /api/genNullUser``` // 生成測試用的假帳號資料
+
+```DELETE /api/delNullUser``` // 刪除測試用的假帳號資料
 
 ## 如何在 localhost 安裝與測試：
+1. Clone the repo
+   
+3. Install dependencies and start the app
+   
 ```bash
-cd backend && npm start
+cd backend
+npm i && npm start
 ```
 
-Terminal 會顯示於 localhost:8000 執行，且提醒 mongoDB 以連線，看到此條訊息代表啟動成功。
+Terminal 會顯示於 localhost:8000 執行，且提醒 mongoDB 已連線，看到此條訊息代表啟動成功。
