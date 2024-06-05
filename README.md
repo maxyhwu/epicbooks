@@ -26,7 +26,7 @@ NEXT_PUBLIC_BASE_URL=http://localhost:3000
 yarn dev
 ```
 
-## 後端 REST API 說明：
+## 後端 RESTful API 說明：
 ### 書籍資訊相關
 ```GET /api/search``` // 搜尋書籍
 
